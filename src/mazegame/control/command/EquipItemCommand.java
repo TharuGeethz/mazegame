@@ -2,7 +2,7 @@ package mazegame.control.command;
 
 import mazegame.control.CommandResponse;
 import mazegame.control.ParsedInput;
-import mazegame.entity.CombatSession;
+import mazegame.control.CombatSession;
 import mazegame.entity.Player;
 import mazegame.entity.item.Item;
 
@@ -16,7 +16,7 @@ public class EquipItemCommand implements Command {
 		}
 
 		String itemName = (String) userInput.getArguments().get(0);
-		
+
 		if (currentPlayer.getWearingItems().containsKey(itemName)) {
 			return new CommandResponse("You are already wearing " + itemName + ".");
 		}
@@ -34,13 +34,12 @@ public class EquipItemCommand implements Command {
 
 		if (alreadyWearing != null) {
 			// only one equipped per item type (Weapon, Armor, Shield)
-			message += alreadyWearing.getLabel()+" dropped. \n";
+			message += alreadyWearing.getLabel() + " unequipped. \n";
 			currentPlayer.unequipItem(alreadyWearing.getLabel());
 		}
 
 		// Equip
 		currentPlayer.equipItem(itemName);
-
 
 		message += itemName + " equipped.";
 

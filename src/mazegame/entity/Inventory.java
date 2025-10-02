@@ -25,9 +25,8 @@ public class Inventory {
 		return gold.Subtract(goldPieces);
 	}
 
-	public boolean addItem(Item theItem) {
+	public void addItem(Item theItem) {
 		itemList.put(theItem.getLabel(), theItem);
-		return true;
 	}
 
 	// added new
@@ -48,43 +47,23 @@ public class Inventory {
 	public Item removeItem(String itemName) {
 		if (itemList.containsKey(itemName)) {
 			return itemList.remove(itemName);
-		}
-		// else return ("That item isn't here to remove");
-		else
+		} else {
 			return null;
+		}
 	}
-	
-	
-	public HealingPotion removePotion(String potionName) {
+
+	public void removePotion(String potionName) {
 		if (healingPotionList.containsKey(potionName)) {
-			return healingPotionList.remove(potionName);
+			healingPotionList.remove(potionName);
 		}
-		// else return ("That item isn't here to remove");
-		else
-			return null;
 	}
 
-	private String printItemList() {
-		if (itemList.size() == 0)
-			return "No items here";
-		StringBuilder returnMsg = new StringBuilder();
-		returnMsg.append("Items here ::");
-		for (String item : itemList.keySet()) {
-			returnMsg.append(" [" + item + "]");
-		}
-		return returnMsg.toString();
-	}
-
-	public double getWeight() {
-		double currentWeight = 0;
+	public int getWeight() {
+		int currentWeight = 0;
 		for (Item theItem : this.getItemList().values()) {
 			currentWeight += theItem.getWeight();
 		}
 		return currentWeight;
-	}
-
-	public String toString1() {
-		return printItemList() + "\n" + gold.toString();
 	}
 
 	public HashMap<String, Item> getItemList() {
@@ -147,7 +126,7 @@ public class Inventory {
 		String shields = availableItemsByType(mazegame.entity.item.Shield.class).trim();
 		appendCategory(sb, "Shields", shields);
 
-		// Potions (HealingPotion map)
+		// Potions
 		String potions = formatPotionList();
 		appendCategory(sb, "Potions", potions);
 

@@ -1,5 +1,6 @@
 package mazegame.entity;
 
+import mazegame.control.CombatSession;
 import mazegame.entity.utility.NonPlayerCharacterCollection;
 
 public class Player extends Character {

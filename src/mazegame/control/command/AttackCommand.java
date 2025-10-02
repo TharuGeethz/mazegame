@@ -3,7 +3,7 @@ package mazegame.control.command;
 
 import mazegame.control.CommandResponse;
 import mazegame.control.ParsedInput;
-import mazegame.entity.CombatSession;
+import mazegame.control.CombatSession;
 import mazegame.entity.Player;
 
 public class AttackCommand implements Command {
@@ -33,8 +33,7 @@ public class AttackCommand implements Command {
 			// It is the player's turn now: execute player's attack
 			result = session.playerAttackAndAdvance(arg);
 		} else {
-			// Not player's turn yet: optionally remember first target, then auto-run until
-			// player turn
+			// player provides a target in first round
 			if (session.isFirstRound() && arg != null) {
 				session.setInitialPreferredTargetName(arg);
 

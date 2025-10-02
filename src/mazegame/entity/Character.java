@@ -101,29 +101,12 @@ public class Character {
 		return (wearingItems.containsKey(itemName) || inventory.hasItem(itemName));
 	}
 
-//	public Item removeItem(String itemName) {
-//		Item item = null;
-//		if(!hasItem(itemName)) {
-//			System.out.println("There is no item with that name! ");
-//		}else {
-//			
-//			if(inventory.hasItem(itemName)) {
-//				 item = inventory.removeItem(itemName);  //Remove item from inventory 
-//				
-//			}else {
-//				item = wearingItems.remove(itemName); //Remove item from wearing items 
-//			}
-//		}
-//		return item;
-//
-//	}
+	public boolean isWearing(String itemName) {
+		return (wearingItems.containsKey(itemName));
+	}
 
 	public int getItemsWeight() {
-		int totalWeight = 0;
-		for (Item item : inventory.getItemList().values()) {
-			totalWeight += item.getWeight();
-		}
-
+		int totalWeight = inventory.getWeight();
 		for (Item item : wearingItems.values()) {
 			totalWeight += item.getWeight();
 		}

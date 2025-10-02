@@ -2,7 +2,7 @@ package mazegame.control.command;
 
 import mazegame.control.CommandResponse;
 import mazegame.control.ParsedInput;
-import mazegame.entity.CombatSession;
+import mazegame.control.CombatSession;
 import mazegame.entity.Player;
 import mazegame.entity.item.HealingPotion;
 

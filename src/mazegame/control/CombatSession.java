@@ -1,6 +1,11 @@
 
-package mazegame.entity;
+package mazegame.control;
 
+import mazegame.entity.Character;
+import mazegame.entity.Dice;
+import mazegame.entity.Location;
+import mazegame.entity.NonPlayerCharacter;
+import mazegame.entity.Player;
 import mazegame.entity.item.Item;
 import mazegame.entity.item.Weapon;
 import mazegame.entity.utility.StrengthTable;
@@ -39,23 +44,23 @@ public class CombatSession {
 		return firstRound;
 	}
 
-	// ---------- ONE round per call ----------
 	public String resolveSingleRound() {
 		StringBuilder log = new StringBuilder();
 
-		if (!hasAnyHostileAlive()) {
+		if (isEnemyPartyDefeated()) {
 			return "There are no hostile NPCs here.";
 		}
 		if (thePlayer.getLifePoints() < 1) {
 			return "You cannot fight — you have fallen.";
 		}
 
-		log.append("\n===== Round ").append(round).append(" =====\n");
+		log.append("\n\n===== Round ").append(round).append(" =====\n");
 
 		// Player side (get one random attacker from player+allies)
 		log.append(playerPartyPhase()).append("\n");
-		log.append(endOfTurnStatus()).append("\n");
+
 		if (isOver()) {
+			log.append(endOfTurnStatus()).append("\n");
 			return log.append("\n").append(getCombatConclusion()).toString();
 		}
 
@@ -70,11 +75,6 @@ public class CombatSession {
 		round += 1;
 
 		return log.toString().trim();
-	}
-
-
-	public boolean isOver() {
-		return isEnemyPartyDefeated() || isPlayerPartyDefeated();
 	}
 
 	public String getCombatConclusion() {
@@ -182,9 +182,10 @@ public class CombatSession {
 			if (isFirstRound()) {
 				log.append(resolveSingleRound());
 			}
-			log.append("===== Round ").append(round).append(" =====\n");
+			log.append("\n\n===== Round ").append(round).append(" =====\n");
 
 			// --- Player side (random: player or ally) ---
+			log.append("— Player Party Phase —\n");
 			List<Character> party = new ArrayList<>();
 			if (thePlayer.getLifePoints() > 0)
 				party.add(thePlayer);
@@ -213,9 +214,10 @@ public class CombatSession {
 				}
 			}
 
-			log.append(endOfTurnStatus()).append("\n");
-			if (isOver())
+			if (isOver()) {
+				log.append(endOfTurnStatus()).append("\n");
 				break;
+			}
 
 			// --- Enemy side (one random hostile) ---
 			log.append(enemyPartyPhase()).append("\n");
@@ -237,7 +239,7 @@ public class CombatSession {
 			return advanceCombatUntilPlayerTurn();
 		}
 
-		log.append("===== Round ").append(round).append(" =====\n");
+//		log.append("\n\n===== Round ").append(round).append(" =====\n");
 
 		// choose target
 		NonPlayerCharacter target = null;
@@ -269,9 +271,9 @@ public class CombatSession {
 
 		// perform player's attack
 		log.append(playerAttacks(target)).append("\n");
-		log.append(endOfTurnStatus()).append("\n");
 
 		if (isOver()) {
+			log.append(endOfTurnStatus()).append("\n");
 			awaitingPlayerAction = false;
 			log.append("\n").append(getCombatConclusion());
 			return log.toString().trim();
@@ -306,7 +308,7 @@ public class CombatSession {
 			return advanceCombatUntilPlayerTurn();
 		}
 
-		log.append("\n===== Round ").append(round).append(" =====\n");
+		log.append("\n\n===== Round ").append(round).append(" =====\n");
 		if (reason != null && !reason.isBlank())
 			log.append(reason).append("\n");
 		log.append("You spend your turn.\n");
@@ -332,6 +334,10 @@ public class CombatSession {
 		return log.toString().trim();
 	}
 
+	public boolean isOver() {
+		return isEnemyPartyDefeated() || isPlayerPartyDefeated();
+	}
+
 	private List<NonPlayerCharacter> livingAllies() {
 		return thePlayer.getNpcCollection().values().stream().filter(n -> !n.isHostile() && n.getLifePoints() > 0)
 				.collect(Collectors.toCollection(ArrayList::new));
@@ -340,10 +346,6 @@ public class CombatSession {
 	private List<NonPlayerCharacter> livingHostiles() {
 		return location.getNpcCollection().values().stream().filter(n -> n.isHostile() && n.getLifePoints() > 0)
 				.collect(Collectors.toCollection(ArrayList::new));
-	}
-
-	private boolean hasAnyHostileAlive() {
-		return !livingHostiles().isEmpty();
 	}
 
 	private boolean isPlayerPartyDefeated() {
@@ -355,7 +357,7 @@ public class CombatSession {
 	}
 
 	private String playerAttacks(NonPlayerCharacter target) {
-		Weapon weaponUsed = resolveWeaponForAttack(thePlayer);
+		Weapon weaponUsed = getWeaponForAttack(thePlayer);
 		int strMod = StrengthTable.getInstance().getModifier(thePlayer.getStrength());
 		int attackRoll = Dice.roll("1d20");
 		int attackScore = attackRoll + strMod;
@@ -369,7 +371,8 @@ public class CombatSession {
 			target.setLifePoints(newHP);
 
 			if (newHP < 1) {
-				thePlayer.getCurrentLocation().getNpcCollection().remove(target.getName());
+				thePlayer.getCurrentLocation().getNpcCollection().remove(target.getName().toLowerCase());
+				thePlayer.getNpcCollection().remove(target.getName().toLowerCase());
 				return String.format(
 						"You attack %s with %s — HIT! (roll %d + STR %d = %d vs AC %d)\n"
 								+ "Damage: %s + STR %d = %d. %s is slain.",
@@ -388,7 +391,7 @@ public class CombatSession {
 	}
 
 	private String npcAttacksPlayer(NonPlayerCharacter attacker) {
-		Weapon weaponUsed = resolveWeaponForAttack(attacker);
+		Weapon weaponUsed = getWeaponForAttack(attacker);
 		int strMod = StrengthTable.getInstance().getModifier(attacker.getStrength());
 		int attackRoll = Dice.roll("1d20");
 		int attackScore = attackRoll + strMod;
@@ -413,7 +416,7 @@ public class CombatSession {
 	}
 
 	private String npcAttacksNpc(NonPlayerCharacter attacker, NonPlayerCharacter victim) {
-		Weapon weaponUsed = resolveWeaponForAttack(attacker);
+		Weapon weaponUsed = getWeaponForAttack(attacker);
 		int strMod = StrengthTable.getInstance().getModifier(attacker.getStrength());
 		int attackRoll = Dice.roll("1d20");
 		int attackScore = attackRoll + strMod;
@@ -428,6 +431,7 @@ public class CombatSession {
 
 			if (newHP < 1) {
 				thePlayer.getCurrentLocation().getNpcCollection().remove(victim.getName().toLowerCase());
+				thePlayer.getNpcCollection().remove(victim.getName().toLowerCase());
 				return String.format(
 						"%s strikes %s with %s — HIT! (roll %d + STR %d = %d vs AC %d)\n"
 								+ "Damage: %s + STR %d = %d. %s is slain.",
@@ -460,7 +464,7 @@ public class CombatSession {
 		return target;
 	}
 
-	private Weapon resolveWeaponForAttack(Character character) {
+	private Weapon getWeaponForAttack(Character character) {
 		Weapon equipped = character.getEquippedWeapon();
 		if (equipped != null) {
 			return equipped;

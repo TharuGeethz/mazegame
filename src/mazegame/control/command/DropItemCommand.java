@@ -14,6 +14,10 @@ public class DropItemCommand implements Command {
 
 		String itemName = (String) userInput.getArguments().get(0);
 		if (currentPlayer.hasItem(itemName)) {
+			// unequip if wearing
+			if (currentPlayer.isWearing(itemName)) {
+				currentPlayer.unequipItem(itemName);
+			}
 			Item item = currentPlayer.getInventory().removeItem(itemName);
 			currentPlayer.getCurrentLocation().getInventory().addItem(item);
 			return new CommandResponse("You dropped the " + itemName);
