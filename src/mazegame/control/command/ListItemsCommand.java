@@ -3,6 +3,7 @@ package mazegame.control.command;
 import mazegame.control.CommandResponse;
 import mazegame.control.ParsedInput;
 import mazegame.entity.Player;
+import mazegame.entity.item.Item;
 
 public class ListItemsCommand implements Command {
 
@@ -10,40 +11,47 @@ public class ListItemsCommand implements Command {
 
 		StringBuilder itemList = new StringBuilder();
 
-		if (currentPlayer.getInventory().getItemList().isEmpty()) {
-			itemList.append("No items held");
+		if (currentPlayer.getInventory().getItemList().isEmpty()
+				&& currentPlayer.getInventory().getPotionList().isEmpty()
+				&& currentPlayer.getInventory().getGold().getTotal() == 0) {
+			itemList.append("No items held \n");
 		} else {
-			itemList.append("Items held :: ");
-			for (String item : currentPlayer.getInventory().getItemList().keySet()) {
-				itemList.append("[ " + item + " ]");
-			}
+			itemList.append("Items held :: \n");
+			itemList.append(currentPlayer.getInventory().toString());
 		}
 
 		if (currentPlayer.getWearingItems().isEmpty()) {
 			itemList.append("\nNo wearing items");
 		} else {
-			itemList.append("\nItems wearing :: ");
-			for (String item : currentPlayer.getWearingItems().keySet()) {
-				itemList.append("[ " + item + " ]");
-			}
-		}
+			itemList.append("\nItems wearing :: \n");
+			// Weapons
+			String weapons = availableItemsByType(mazegame.entity.item.Weapon.class, currentPlayer).trim();
+			appendCategory(itemList, "Weapons", weapons);
 
-		if (currentPlayer.getInventory().getPotionList().isEmpty()) {
-			itemList.append("\nNo potions held");
-		} else {
-			itemList.append("\nPotions held :: ");
-			for (String item : currentPlayer.getInventory().getPotionList().keySet()) {
-				itemList.append("[ " + item + " ]");
-			}
-		}
+			// Armors
+			String armors = availableItemsByType(mazegame.entity.item.Armor.class, currentPlayer).trim();
+			appendCategory(itemList, "Armors", armors);
 
-		if (currentPlayer.getInventory().getGold().getTotal() == 0) {
-			itemList.append("\nNo gold");
-		} else {
-			itemList.append("\nGold :: ");
-			itemList.append("[ " + currentPlayer.getInventory().getGold().getTotal() + " pieces]");
+			// Shields
+			String shields = availableItemsByType(mazegame.entity.item.Shield.class, currentPlayer).trim();
+			appendCategory(itemList, "Shields", shields);
 		}
 
 		return new CommandResponse(itemList.toString());
+	}
+
+	private void appendCategory(StringBuilder sb, String title, String content) {
+		if (content != null && !content.isBlank()) {
+			sb.append(title).append(" :: ").append(content).append('\n');
+		} else {
+			sb.append("No ").append(title).append('\n');
+		}
+	}
+
+	public <T extends Item> String availableItemsByType(Class<T> type, Player currentPlayer) {
+		StringBuilder returnMsg = new StringBuilder();
+		currentPlayer.getWearingItems().values().stream().filter(type::isInstance).map(Item::getLabel)
+				.forEach(label -> returnMsg.append("[").append(label).append("] "));
+		return returnMsg.toString();
 	}
 }

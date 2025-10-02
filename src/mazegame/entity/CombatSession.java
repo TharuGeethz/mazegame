@@ -72,25 +72,6 @@ public class CombatSession {
 		return log.toString().trim();
 	}
 
-	// Player skipped their action (e.g., equip, use potion)
-	public String skipPlayerTurn() {
-		StringBuilder log = new StringBuilder();
-		log.append("===== Round ").append(round).append(" =====\n");
-		log.append("You spent your turn doing above, so giving turn to Enemy Party...\n");
-
-		// Now enemy phase
-		log.append(enemyPartyPhase()).append("\n");
-		log.append(endOfTurnStatus()).append("\n");
-
-		if (isOver()) {
-			log.append("\n").append(getCombatConclusion());
-		} else {
-			round++;
-		}
-
-		firstRound = false;
-		return log.toString().trim();
-	}
 
 	public boolean isOver() {
 		return isEnemyPartyDefeated() || isPlayerPartyDefeated();
