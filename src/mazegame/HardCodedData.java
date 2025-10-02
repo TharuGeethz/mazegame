@@ -224,7 +224,7 @@ public class HardCodedData implements IMazeData {
 				java.util.List.of("shield, small, wooden"), Bone);
 		npcsEchoing.add(Bone);
 
-		echoingCatacombs.setNpcs(npcsEchoing);
+		echoingCatacombs.setNpcs(npcsEchoing, true);
 
 		// Oakheart Village
 		// Friendly NPCs
@@ -246,7 +246,7 @@ public class HardCodedData implements IMazeData {
 		addItemsToNPC(java.util.List.of("nunchaku"), java.util.List.of("padded"), java.util.List.of(), Tamsin);
 		npcsOakheart.add(Tamsin);
 
-		oakheartVillage.setNpcs(npcsOakheart);
+		oakheartVillage.setNpcs(npcsOakheart, false);
 
 		// Whispering Marsh
 
@@ -269,7 +269,7 @@ public class HardCodedData implements IMazeData {
 		addItemsToNPC(List.of("longspear"), List.of("studded leather"), List.of("buckler"), Mire);
 		npcsWhisperingMarsh.add(Mire);
 
-		whisperingMarsh.setNpcs(npcsWhisperingMarsh);
+		whisperingMarsh.setNpcs(npcsWhisperingMarsh, true);
 
 		// Town Square
 		// allies
@@ -294,7 +294,7 @@ public class HardCodedData implements IMazeData {
 		addItemsToNPC(List.of("sword, short"), List.of("leather"), List.of("shield, small, wooden"), Piper);
 		npcsTownSquare.add(Piper);
 
-		townSquare.setNpcs(npcsTownSquare);
+		townSquare.setNpcs(npcsTownSquare, false);
 
 		// Crystal Cave
 		// allies
@@ -315,7 +315,7 @@ public class HardCodedData implements IMazeData {
 		addItemsToNPC(List.of("handaxe"), List.of("leather"), List.of(), lostMiner);
 		npcsCrystalCave.add(lostMiner);
 
-		crystalCave.setNpcs(npcsCrystalCave);
+		crystalCave.setNpcs(npcsCrystalCave, false);
 
 		// Castle Drawbridge
 		// hostile
@@ -346,7 +346,7 @@ public class HardCodedData implements IMazeData {
 		addItemsToNPC(List.of("greatsword"), List.of("half-plate"), List.of("shield, large, steel"), Thal);
 		npcsDrawbridge.add(Thal);
 
-		castleDrawbridge.setNpcs(npcsDrawbridge);
+		castleDrawbridge.setNpcs(npcsDrawbridge, true);
 
 	}
 

@@ -40,7 +40,8 @@ public class Location {
 		this.label = label;
 	}
 
-	public void setNpcs(List<NonPlayerCharacter> npcs) {
+	public void setNpcs(List<NonPlayerCharacter> npcs, boolean isHostile) {
+		this.npcCollection.setHostileCollection(isHostile);
 		for (NonPlayerCharacter npc : npcs) {
 			this.npcCollection.put(npc.getName().toLowerCase(), npc);
 		}

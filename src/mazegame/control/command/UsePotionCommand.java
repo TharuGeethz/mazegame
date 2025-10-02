@@ -21,11 +21,12 @@ public class UsePotionCommand implements Command {
 			if (thePlayer.getInventory().getPotionList().containsKey(potionName)) {
 				HealingPotion potion = thePlayer.getInventory().getPotionList().remove(potionName);
 				int lifePointsRecovered = potion.heal();
-				int newTotalLifePoints = thePlayer.getLifePoints() + lifePointsRecovered;
+				int initialLifePoints = thePlayer.getLifePoints();
+				int newTotalLifePoints = initialLifePoints + lifePointsRecovered;
 				thePlayer.setLifePoints(Math.min(newTotalLifePoints, 20));
 
 				String message = "Life points restored from potion " + potion.getLabel() + "\nLife points :: "
-						+ thePlayer.getLifePoints();
+						+ initialLifePoints + " -> " + thePlayer.getLifePoints();
 
 				CombatSession cs = thePlayer.getCombatSession();
 				if (cs != null && !cs.isOver() && cs.isAwaitingPlayerAction()) {

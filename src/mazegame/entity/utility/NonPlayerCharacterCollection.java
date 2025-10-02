@@ -1,12 +1,12 @@
 package mazegame.entity.utility;
 
-
 import java.util.HashMap;
-
 
 import mazegame.entity.NonPlayerCharacter;
 
 public class NonPlayerCharacterCollection extends HashMap<String, NonPlayerCharacter> {
+
+	private boolean isHostileCollection;
 
 	public NonPlayerCharacterCollection() {
 		super();
@@ -17,18 +17,19 @@ public class NonPlayerCharacterCollection extends HashMap<String, NonPlayerChara
 			return false;
 		return this.containsKey(name.toLowerCase());
 	}
-	
-	
 
-//	public List<NonPlayerCharacter> getNPCs() {
-//		return new ArrayList<>(this.values());
-//	}
-
-	
 	public void removeNpc(NonPlayerCharacter npc) {
 		if (npc != null) {
 			this.remove(npc.getName().toLowerCase());
 		}
+	}
+
+	public boolean isHostileCollection() {
+		return isHostileCollection;
+	}
+
+	public void setHostileCollection(boolean hostileCollection) {
+		isHostileCollection = hostileCollection;
 	}
 
 	public void removeNpcByName(String name) {
