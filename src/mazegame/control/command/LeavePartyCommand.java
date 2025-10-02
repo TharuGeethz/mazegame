@@ -8,27 +8,33 @@ import mazegame.entity.utility.NonPlayerCharacterCollection;
 
 public class LeavePartyCommand implements Command {
 
-	public CommandResponse execute(ParsedInput userInput, Player currentPlayer) {
-		Location currentLocation = currentPlayer.getCurrentLocation();
-		NonPlayerCharacterCollection npcCollection = currentPlayer.getNpcCollection();
+    private static final String MSG_NO_PARTY = "You don't have a party to leave";
+    private static final String MSG_LEFT_PARTY = "You left the party";
+    private static final String MSG_HOSTILE_LOCATION = "Location occupied with enemies! You cannot leave your party here.";
 
-		if (!npcCollection.isEmpty()) {
-			if (currentPlayer.getCurrentLocation().getNpcCollection().isEmpty()) {
-				NonPlayerCharacterCollection leftCNpcCollection = removeCollection(npcCollection);
-				currentLocation.setNpcCollection(leftCNpcCollection);
+    public CommandResponse execute(ParsedInput userInput, Player currentPlayer) {
 
-				return new CommandResponse("You left the party");
-			} else if (currentPlayer.getCurrentLocation().getNpcCollection().isHostileCollection()) {
-				return new CommandResponse("Location occupied with enemies! You cannot leave your party here.");
-			}
-		}
-		return new CommandResponse("You don't have a party to leave");
-	}
+        final Location currentLocation = currentPlayer.getCurrentLocation();
+        final NonPlayerCharacterCollection npcsHere = currentLocation.getNpcCollection();
+        final NonPlayerCharacterCollection playerParty = currentPlayer.getNpcCollection();
 
-	public NonPlayerCharacterCollection removeCollection(NonPlayerCharacterCollection npcList) {
-		NonPlayerCharacterCollection npcCollection = new NonPlayerCharacterCollection();
-		npcCollection.putAll(npcList);
-		npcList.clear();
-		return npcCollection;
-	}
+        if (!playerParty.isEmpty()) {
+            if (npcsHere.isEmpty() || !npcsHere.isHostileCollection()) {
+                NonPlayerCharacterCollection leftCNpcCollection = removeCollection(playerParty);
+                currentLocation.setNpcCollection(leftCNpcCollection);
+
+                return new CommandResponse(MSG_LEFT_PARTY);
+            } else if (npcsHere.isHostileCollection()) {
+                return new CommandResponse(MSG_HOSTILE_LOCATION);
+            }
+        }
+        return new CommandResponse(MSG_NO_PARTY);
+    }
+
+    public NonPlayerCharacterCollection removeCollection(NonPlayerCharacterCollection npcList) {
+        NonPlayerCharacterCollection npcCollection = new NonPlayerCharacterCollection();
+        npcCollection.putAll(npcList);
+        npcList.clear();
+        return npcCollection;
+    }
 }
