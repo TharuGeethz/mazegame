@@ -18,9 +18,9 @@ public class LeavePartyCommand implements Command {
 				currentLocation.setNpcCollection(leftCNpcCollection);
 
 				return new CommandResponse("You left the party");
+			} else if (currentPlayer.getCurrentLocation().getNpcCollection().isHostileCollection()) {
+				return new CommandResponse("Location occupied with enemies! You cannot leave your party here.");
 			}
-			return new CommandResponse("Location occupied! You cannot leave party in this location.");
-
 		}
 		return new CommandResponse("You don't have a party to leave");
 	}
