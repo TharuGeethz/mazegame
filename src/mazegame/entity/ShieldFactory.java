@@ -32,7 +32,7 @@ public class ShieldFactory {
 	    
 	    
 
-	    public HashMap<String, Shield> getAllShileds() {
+	    public HashMap<String, Shield> getAllShields() {
 	        return shields;
 	    }
 	
