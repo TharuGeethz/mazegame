@@ -66,6 +66,10 @@ public class Character {
 		return inventory;
 	}
 
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
+
 	public Map<String, Item> getWearingItems() {
 		return wearingItems;
 	}
@@ -103,15 +107,6 @@ public class Character {
 
 	public boolean isWearing(String itemName) {
 		return (wearingItems.containsKey(itemName));
-	}
-
-	public int getItemsWeight() {
-		int totalWeight = inventory.getWeight();
-		for (Item item : wearingItems.values()) {
-			totalWeight += item.getWeight();
-		}
-
-		return totalWeight;
 	}
 
 	public int getArmorClass() {

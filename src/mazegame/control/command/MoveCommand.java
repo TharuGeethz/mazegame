@@ -22,7 +22,7 @@ public class MoveCommand implements Command {
 		}
 		thePlayer.setCurrentLocation(desiredExit.getDestination());
 		boolean isHostileCollection = thePlayer.getCurrentLocation().getNpcCollection().isHostileCollection();
-		return new CommandResponse("You successfully move " + exitLabel + " and find   yourself somewhere else\n\n"
+		return new CommandResponse("You successfully move " + exitLabel + " and find yourself somewhere else\n\n"
 				+ thePlayer.getCurrentLocation().toString() + encounterHostileMessage(isHostileCollection));
 	}
 

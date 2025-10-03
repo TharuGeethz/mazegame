@@ -2,6 +2,7 @@ package mazegame.control.command;
 
 import mazegame.control.CommandResponse;
 import mazegame.control.ParsedInput;
+import mazegame.entity.FiniteInventory;
 import mazegame.entity.Player;
 import mazegame.entity.item.HealingPotion;
 import mazegame.entity.item.Item;
@@ -39,11 +40,16 @@ public class GetItemCommand implements Command {
 
 			if (currentItem != null) {
 				int weightLimit = WeightLimit.getInstance().getModifier(currentPlayer.getStrength());
-				int playerCurrentWeight = currentPlayer.getItemsWeight();
+				FiniteInventory playerInventory = (FiniteInventory) currentPlayer.getInventory();
+				double playerInventoryWeight = playerInventory.getWeight();
 
-				int itemWeight = currentItem.getWeight();
+				for (Item item : currentPlayer.getWearingItems().values()) {
+					playerInventoryWeight += item.getWeight();
+				}
 
-				if (playerCurrentWeight + itemWeight <= weightLimit) {
+				double itemWeight = currentItem.getWeight();
+
+				if (playerInventoryWeight + itemWeight <= weightLimit) {
 					currentPlayer.getInventory().addItem(currentItem);
 					currentPlayer.getCurrentLocation().getInventory().removeItem(currentItem.getLabel());
 					return new CommandResponse(itemName + " has been collected successfully.");

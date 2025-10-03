@@ -4,7 +4,7 @@ public abstract class Item {
 
   
     private int value;
-    private int weight;
+    private double weight;
     private String label;
     private String description;
     
@@ -38,7 +38,7 @@ public abstract class Item {
         return value;
     }
 
-    public int getWeight()
+    public double getWeight()
     {
         return weight;
     }

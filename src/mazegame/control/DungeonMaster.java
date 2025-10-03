@@ -33,11 +33,8 @@ public class DungeonMaster {
 
 	public void setupPlayer() {
 		String playerName = gameClient.getReply("What name do you choose to be known by?");
-		thePlayer = new Player(playerName);
+		thePlayer = new Player(playerName, 20, 26, 20); // average starting life points for a player is 20 life points
 		thePlayer.setCurrentLocation(gameData.getStartingLocation());
-		thePlayer.setLifePoints(20); // average starting life points for a player is 20 life points
-		thePlayer.setStrength(40);
-		thePlayer.setAgility(26);
 		thePlayer.getInventory().setGold(new Money(100));
 
 		gameClient.playerMessage("Welcome " + playerName + "\n\n");

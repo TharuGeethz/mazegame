@@ -25,8 +25,9 @@ public class Inventory {
 		return gold.Subtract(goldPieces);
 	}
 
-	public void addItem(Item theItem) {
+	public boolean addItem(Item theItem) {
 		itemList.put(theItem.getLabel(), theItem);
+		return true;
 	}
 
 	// added new
@@ -57,15 +58,6 @@ public class Inventory {
 			healingPotionList.remove(potionName);
 		}
 	}
-
-	public int getWeight() {
-		int currentWeight = 0;
-		for (Item theItem : this.getItemList().values()) {
-			currentWeight += theItem.getWeight();
-		}
-		return currentWeight;
-	}
-
 	public HashMap<String, Item> getItemList() {
 		return itemList;
 	}

@@ -3,6 +3,8 @@ package mazegame.entity;
 import mazegame.control.CombatSession;
 import mazegame.entity.utility.NonPlayerCharacterCollection;
 
+import java.util.HashMap;
+
 public class Player extends Character {
 
 	private Location currentLocation;
@@ -10,9 +12,10 @@ public class Player extends Character {
 
 	private CombatSession combatSession;
 
-	public Player(String name) {
-		super(name);
-		npcCollection = new NonPlayerCharacterCollection();
+
+	public Player(String name, int strength, int agility, int lifePoints) {
+        super(name, strength, agility, lifePoints);
+		this.setInventory(new FiniteInventory(strength));
 	}
 
 	public Location getCurrentLocation() {
