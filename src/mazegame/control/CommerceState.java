@@ -8,10 +8,10 @@ public class CommerceState extends CommandState {
 
 	public CommerceState() {
 		this.getAvailableCommands().put("go", new MoveCommand());
-		//this.getAvailableCommands().put("buy", new BuyCommand());
+		this.getAvailableCommands().put("buy", new BuyCommand());
 		this.getAvailableCommands().put("move", new MoveCommand());
 		this.getAvailableCommands().put("look", new LookCommand());
-		//this.getAvailableCommands().put("sell", new SellCommand());
+		this.getAvailableCommands().put("sell", new SellCommand());
 		this.getAvailableCommands().put("quit", new QuitCommand());
 
 		this.getAvailableCommands().put("list", new ListItemsCommand());
