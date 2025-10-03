@@ -3,6 +3,7 @@ package mazegame.control.command;
 import mazegame.control.CommandResponse;
 import mazegame.control.ParsedInput;
 import mazegame.entity.Location;
+import mazegame.entity.NonPlayerCharacter;
 import mazegame.entity.Player;
 import mazegame.entity.utility.NonPlayerCharacterCollection;
 
@@ -18,23 +19,45 @@ public class LeavePartyCommand implements Command {
 		final NonPlayerCharacterCollection npcsHere = currentLocation.getNpcCollection();
 		final NonPlayerCharacterCollection playerParty = currentPlayer.getNpcCollection();
 
-		if (!playerParty.isEmpty()) {
-			if (npcsHere.isEmpty() || !npcsHere.isHostileCollection()) {
-				NonPlayerCharacterCollection leftCNpcCollection = removeCollection(playerParty);
-				currentLocation.setNpcCollection(leftCNpcCollection);
-
-				return new CommandResponse(MSG_LEFT_PARTY);
-			} else {
-				return new CommandResponse(MSG_HOSTILE_LOCATION);
-			}
+		if (playerParty.isEmpty()) {
+			return new CommandResponse(MSG_NO_PARTY);
 		}
-		return new CommandResponse(MSG_NO_PARTY);
+
+		if (!npcsHere.isEmpty() && npcsHere.isHostileCollection()) {
+			return new CommandResponse(MSG_HOSTILE_LOCATION);
+		}
+
+		// If name given, leave only that party member
+		if (!userInput.getArguments().isEmpty()) {
+			String npcName = (String) userInput.getArguments().get(0);
+			String npcNameLower = npcName.trim().toLowerCase();
+			NonPlayerCharacter npc = playerParty.get(npcNameLower);
+			if (npc == null) {
+				return new CommandResponse("'" + npcName + "' is not in your party.");
+			}
+			return new CommandResponse(leaveSpecificNpc(currentPlayer, npc));
+		}
+
+		// If no name given, leave all party members
+		// Add party members to current location
+		for (NonPlayerCharacter npc : playerParty.values()) {
+			currentLocation.getNpcCollection().put(npc.getName().toLowerCase(), npc);
+		}
+		playerParty.clear();
+		return new CommandResponse(MSG_LEFT_PARTY);
 	}
 
-	public NonPlayerCharacterCollection removeCollection(NonPlayerCharacterCollection npcList) {
-		NonPlayerCharacterCollection npcCollection = new NonPlayerCharacterCollection();
-		npcCollection.putAll(npcList);
-		npcList.clear();
-		return npcCollection;
+	private String leaveSpecificNpc(Player currentPlayer, NonPlayerCharacter npc) {
+		// Remove from party and add to current location
+		currentPlayer.getNpcCollection().remove(npc.getName().toLowerCase());
+		currentPlayer.getCurrentLocation().getNpcCollection().put(npc.getName().toLowerCase(), npc);
+		return npc.getName() + " has left your party.";
 	}
+
+	// public NonPlayerCharacterCollection removeCollection(NonPlayerCharacterCollection npcList) {
+	// 	NonPlayerCharacterCollection npcCollection = new NonPlayerCharacterCollection();
+	// 	npcCollection.putAll(npcList);
+	// 	npcList.clear();
+	// 	return npcCollection;
+	// }
 }
