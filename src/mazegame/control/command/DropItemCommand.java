@@ -8,6 +8,9 @@ import mazegame.entity.item.Item;
 public class DropItemCommand implements Command {
 
 	public CommandResponse execute(ParsedInput userInput, Player currentPlayer) {
+		if (currentPlayer.inCombat()) {
+			return new CommandResponse("You can't drop items while in combat!");
+		}
 		if (userInput.getArguments().isEmpty()) {
 			return new CommandResponse("Which item do you want to drop? ");
 		}

@@ -13,6 +13,10 @@ public class GetItemCommand implements Command {
 
 	public CommandResponse execute(ParsedInput userInput, Player currentPlayer) {
 
+		if (currentPlayer.inCombat()) {
+			return new CommandResponse("You can't pick up items while in combat!");
+		}
+
 		if (userInput.getArguments().isEmpty()) {
 			return new CommandResponse("Please specify the item you want.");
 		}

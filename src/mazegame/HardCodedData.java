@@ -8,6 +8,7 @@ import mazegame.boundary.IMazeData;
 import mazegame.entity.ArmorFactory;
 import mazegame.entity.Blacksmith;
 import mazegame.entity.Exit;
+import mazegame.entity.GameStatus;
 import mazegame.entity.Location;
 import mazegame.entity.NonPlayerCharacter;
 import mazegame.entity.ShieldFactory;
@@ -254,17 +255,17 @@ public class HardCodedData implements IMazeData {
 		List<NonPlayerCharacter> npcsWhisperingMarsh = new ArrayList<>();
 
 		// Whispering Marsh — 3 hostile NPCs (one-word names)
-		NonPlayerCharacter Snar = new NonPlayerCharacter("Snar", 14, 10, 22,
+		NonPlayerCharacter Snar = new NonPlayerCharacter("Snar", 14, 10, 12,
 				"This swamp eats the weak. You look tasty.", true);
 		addItemsToNPC(List.of("handaxe"), List.of("leather"), List.of("shield, small, steel"), Snar);
 		npcsWhisperingMarsh.add(Snar);
 
-		NonPlayerCharacter Grit = new NonPlayerCharacter("Grit", 16, 9, 24,
+		NonPlayerCharacter Grit = new NonPlayerCharacter("Grit", 16, 9, 14,
 				"Move quick or the mud will have you for breakfast.", true);
 		addItemsToNPC(List.of("greataxe"), List.of("scale mail"), List.of("shield, large, wooden"), Grit);
 		npcsWhisperingMarsh.add(Grit);
 
-		NonPlayerCharacter Mire = new NonPlayerCharacter("Mire", 12, 11, 20,
+		NonPlayerCharacter Mire = new NonPlayerCharacter("Mire", 12, 11, 18,
 				"Keep your purse close, city-breed. We take what we like.", true);
 		addItemsToNPC(List.of("longspear"), List.of("studded leather"), List.of("buckler"), Mire);
 		npcsWhisperingMarsh.add(Mire);
@@ -348,6 +349,18 @@ public class HardCodedData implements IMazeData {
 
 		castleDrawbridge.setNpcs(npcsDrawbridge, true);
 
+		// add locations to game status
+		GameStatus.getInstance().addLocation(forestClearing);
+		GameStatus.getInstance().addLocation(echoingCatacombs);
+		GameStatus.getInstance().addLocation(oakheartVillage);
+		GameStatus.getInstance().addLocation(whisperingMarsh);
+		GameStatus.getInstance().addLocation(townSquare);
+		GameStatus.getInstance().addLocation(innOfTheBoar);
+		GameStatus.getInstance().addShop(forgeOfHelan);
+		GameStatus.getInstance().addLocation(eastMarket);
+		GameStatus.getInstance().addShop(titansAnvil);
+		GameStatus.getInstance().addLocation(crystalCave);
+		GameStatus.getInstance().addLocation(castleDrawbridge);
 	}
 
 	// Create

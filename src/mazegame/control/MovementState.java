@@ -22,7 +22,7 @@ public class MovementState extends CommandState {
         this.getAvailableCommands().put("see", new SeeStatusCommand());
         this.getAvailableCommands().put("flee", new FleeCommand());
         this.getAvailableCommands().put("join", new JoinPartyCommand());
-       this.getAvailableCommands().put("leave", new LeavePartyCommand());
+        this.getAvailableCommands().put("leave", new LeavePartyCommand());
         this.getAvailableCommands().put("use", new UsePotionCommand());
         this.getAvailableCommands().put("talk", new TalkCommand());
        // this.getAvailableCommands().put("help", new HelpCommand());

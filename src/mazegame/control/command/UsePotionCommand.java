@@ -30,7 +30,8 @@ public class UsePotionCommand implements Command {
 
 				CombatSession cs = thePlayer.getCombatSession();
 				if (cs != null && !cs.isOver() && cs.isAwaitingPlayerAction()) {
-					message += "\n\n" + cs.playerSkipTurnAndAdvance("You used a potion and recovered life points.");
+					message += "\n\n" + cs.playerSkipTurnAndAdvance(
+							"You drank " + potion.getLabel() + " potion and recovered life points.");
 					if (cs.isOver()) {
 						thePlayer.setCombatSession(null);
 					}

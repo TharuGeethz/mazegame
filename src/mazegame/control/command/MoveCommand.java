@@ -8,6 +8,10 @@ import mazegame.entity.Player;
 public class MoveCommand implements Command {
 
 	public CommandResponse execute(ParsedInput userInput, Player thePlayer) {
+		if (thePlayer.inCombat()) {
+			return new CommandResponse("You can't move while in combat!");
+		}
+
 		if (userInput.getArguments().size() == 0) {
 			return new CommandResponse("If you want to move you need to tell me where.");
 		}

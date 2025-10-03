@@ -21,6 +21,10 @@ public class EquipItemCommand implements Command {
 			return new CommandResponse("You are already wearing " + itemName + ".");
 		}
 
+		if (currentPlayer.getInventory().getPotionList().containsKey(itemName)) {
+			return new CommandResponse("You can't equip a potion!");
+		}
+
 		if (!currentPlayer.getInventory().getItemList().containsKey(itemName)) {
 			return new CommandResponse("You don’t have the " + itemName + ".");
 		}

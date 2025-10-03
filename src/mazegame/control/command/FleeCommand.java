@@ -10,8 +10,10 @@ import mazegame.entity.Player;
 import java.util.Random;
 
 public class FleeCommand implements Command {
-
 	public CommandResponse execute(ParsedInput userInput, Player currentPlayer) {
+		if (!currentPlayer.inCombat()) {
+			return new CommandResponse("You can only flee during combat.");
+		}
 
 		currentPlayer.setCombatSession(null); // player flaw from location so the session is over in that location
 

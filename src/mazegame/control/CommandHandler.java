@@ -11,6 +11,7 @@ public class CommandHandler {
 	}
 
 	public CommandResponse processTurn(String userInput, Player thePlayer) {
+
 		availableCommands = availableCommands.update(thePlayer);
 		ParsedInput validInput = parse(userInput);
 		Command theCommand = (Command) availableCommands.getCommand(validInput.getCommand());

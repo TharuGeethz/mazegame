@@ -36,7 +36,8 @@ public class DungeonMaster {
 		thePlayer = new Player(playerName);
 		thePlayer.setCurrentLocation(gameData.getStartingLocation());
 		thePlayer.setLifePoints(20); // average starting life points for a player is 20 life points
-		thePlayer.setStrength(10); // 66 lbs.
+		thePlayer.setStrength(40);
+		thePlayer.setAgility(26);
 		thePlayer.getInventory().setGold(new Money(100));
 
 		gameClient.playerMessage("Welcome " + playerName + "\n\n");
@@ -59,5 +60,4 @@ public class DungeonMaster {
 		gameClient.playerMessage(playerResponse.getMessage());
 		return !playerResponse.isFinishedGame();
 	}
-
 }
