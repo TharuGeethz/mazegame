@@ -16,7 +16,7 @@ public class CommerceState extends CommandState {
 
 		this.getAvailableCommands().put("list", new ListItemsCommand());
 		this.getAvailableCommands().put("see", new SeeStatusCommand());
-		//this.getAvailableCommands().put("help", new HelpCommand());
+		this.getAvailableCommands().put("help", new HelpCommand());
 
 	}
 
