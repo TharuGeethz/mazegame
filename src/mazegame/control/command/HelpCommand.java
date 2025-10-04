@@ -40,24 +40,27 @@ public class HelpCommand implements Command {
 		}
 		
 		helpText.append("NAVIGATION COMMANDS:\n");
-		helpText.append("  go <direction>   - Move in a direction (north, south, east, west)\n");
-		helpText.append("  move <direction> - Same as 'go'\n");
-		helpText.append("  look             - Examine your current location\n\n");
+		helpText.append("  go <direction>     - Move in a direction (north, south, east, west)\n");
+		helpText.append("  move <direction>   - Same as 'go'\n");
+		helpText.append("  look               - Examine your current location\n\n");
+		helpText.append("  unlock <direction> - Unlock a locked path (requires appropriate key)\n");
 		
 		helpText.append("INFORMATION COMMANDS:\n");
-		helpText.append("  list             - Show your inventory and equipped items\n");
-		helpText.append("  see              - Show your character status\n");
-		helpText.append("  help             - Show this help message\n\n");
-		
+		helpText.append("  list               - Show your inventory and equipped items\n");
+		helpText.append("  see                - Show game status report\n");
+		helpText.append("  help               - Show this help message\n\n");
+
 		helpText.append("OTHER COMMANDS:\n");
-		helpText.append("  quit             - Exit the game\n\n");
-		
+		helpText.append("  quit               - Exit the game\n\n");
+
 		if (inShop) {
 			helpText.append("TIP: Use 'look' to see what items are available for purchase.\n");
 			helpText.append("TIP: Move away from the shop to access exploration commands.");
 		} else {
 			helpText.append("TIP: Use 'look' to see exits, items, and NPCs in your location.\n");
-			helpText.append("TIP: Visit a shop to buy and sell items.");
+			helpText.append("TIP: Visit a shop to buy and sell items.\n");
+			helpText.append("TIP: Some paths to Gregor's castle are locked - find the banner!\n");
+			helpText.append("TIP: The banner can be found after defeating Philip and his gang.");
 		}
 		
 		return new CommandResponse(helpText.toString());
