@@ -20,6 +20,12 @@ public class MoveCommand implements Command {
 		if (desiredExit == null) {
 			return new CommandResponse("There is no exit named like that. Try moving somewhere else!");
 		}
+
+		// Check if the exit is locked
+		if (desiredExit.isLocked()) {
+			return new CommandResponse("The path is locked! You need to unlock it first.");
+		}
+		
 		thePlayer.setCurrentLocation(desiredExit.getDestination());
 		boolean isHostileCollection = thePlayer.getCurrentLocation().getNpcCollection().isHostileCollection();
 		return new CommandResponse("You successfully move " + exitLabel + " and find yourself somewhere else\n\n"

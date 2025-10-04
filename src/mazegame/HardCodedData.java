@@ -17,6 +17,7 @@ import mazegame.entity.WeaponFactory;
 import mazegame.entity.item.Armor;
 import mazegame.entity.item.HealingPotion;
 import mazegame.entity.item.Item;
+import mazegame.entity.item.MiscellaneousItem;
 import mazegame.entity.item.Shield;
 import mazegame.entity.item.Weapon;
 import mazegame.entity.utility.AgilityTable;
@@ -131,10 +132,17 @@ public class HardCodedData implements IMazeData {
 		titansAnvil.getExitCollection().addExit("north", new Exit("A back path leads toward the inn.", innOfTheBoar));
 
 		// Town Square <-> Castle Drawbridge
-		townSquare.getExitCollection().addExit("southwest",
-				new Exit("The road climbs toward the Gregor's castle.", castleDrawbridge));
-		castleDrawbridge.getExitCollection().addExit("northeast",
-				new Exit("The town square is just near by.", townSquare));
+		// townSquare.getExitCollection().addExit("southwest",
+		// 		new Exit("The road climbs toward the Gregor's castle.", castleDrawbridge));
+		// castleDrawbridge.getExitCollection().addExit("northeast",
+		// 		new Exit("The town square is just near by.", townSquare));
+
+		// Town Square <-> Castle Drawbridge
+        Exit townToCastle = new Exit("The road climbs toward the Gregor's castle.", castleDrawbridge);
+        townToCastle.setLocked(true); // Lock castle entrance
+        townSquare.getExitCollection().addExit("southwest", townToCastle);
+        castleDrawbridge.getExitCollection().addExit("northeast",
+                new Exit("The town square is just near by.", townSquare));
 
 		// Town Square <-> Crystal Cave
 		townSquare.getExitCollection().addExit("south",
@@ -143,10 +151,16 @@ public class HardCodedData implements IMazeData {
 				new Exit("You follow the tunnel upward and emerge into the bustling town square.", townSquare));
 
 		// Crystal Cave <-> Castle Drawbridge
-		crystalCave.getExitCollection().addExit("west",
-				new Exit("A rough stone passage leads toward the looming shape of Gregor’s castle.", castleDrawbridge));
-		castleDrawbridge.getExitCollection().addExit("east", new Exit(
-				"You leave the shadow of the castle and descend into the glittering crystal cave.", crystalCave));
+		// crystalCave.getExitCollection().addExit("west",
+		// 		new Exit("A rough stone passage leads toward the looming shape of Gregor’s castle.", castleDrawbridge));
+		// castleDrawbridge.getExitCollection().addExit("east", new Exit(
+		// 		"You leave the shadow of the castle and descend into the glittering crystal cave.", crystalCave));
+
+		Exit caveToCastle = new Exit("A rough stone passage leads toward the looming shape of Gregor's castle.", castleDrawbridge);
+        caveToCastle.setLocked(true); // Lock castle entrance
+        crystalCave.getExitCollection().addExit("west", caveToCastle);
+        castleDrawbridge.getExitCollection().addExit("east", new Exit(
+                "You leave the shadow of the castle and descend into the glittering crystal cave.", crystalCave));
 
 		// Adding items to locations
 
@@ -182,6 +196,10 @@ public class HardCodedData implements IMazeData {
 		// Inn of the Boar
 		addItemsToLocation(List.of("sword, short", "handaxe"), List.of("studded leather"), List.of("buckler"),
 				innOfTheBoar);
+
+		// Add the banner (can be picked up only after defeating all hostile NPCs)
+		MiscellaneousItem banner = new MiscellaneousItem("banner", 1000, 1);
+		innOfTheBoar.getInventory().addItem(banner);
 
 		// Crystal Cave
 		addItemsToLocation(List.of("glaive", "ranseur", "sword, bastard"), List.of("chain shirt"), List.of(),
@@ -317,6 +335,34 @@ public class HardCodedData implements IMazeData {
 		npcsCrystalCave.add(lostMiner);
 
 		crystalCave.setNpcs(npcsCrystalCave, false);
+
+		// Inn of the Boar
+		// hostile
+		List<NonPlayerCharacter> npcsInnOfTheBoar = new ArrayList<>();
+
+		// Philip
+		NonPlayerCharacter Philip = new NonPlayerCharacter("Philip", 18, 12, 35,
+				"You think you can waltz in here and take what's mine? I've crushed tougher fools than you.", true);
+		addItemsToNPC(List.of("greatsword"), List.of("full plate"), List.of("shield, large, steel"), Philip);
+		npcsInnOfTheBoar.add(Philip);
+
+		// Gang member 1
+		NonPlayerCharacter Thug = new NonPlayerCharacter("Thug", 16, 10, 25,
+				"Boss says you need a lesson. I'm here to teach it.", true);
+		addItemsToNPC(List.of("warhammer"), List.of("chainmail"), List.of("shield, small, steel"), Thug);
+		npcsInnOfTheBoar.add(Thug);
+		// Gang member 2
+		NonPlayerCharacter Zyro = new NonPlayerCharacter("Zyro", 14, 13, 22,
+				"You picked the wrong inn to cause trouble in.", true);
+		addItemsToNPC(List.of("longsword"), List.of("banded mail"), List.of("buckler"), Zyro);
+		npcsInnOfTheBoar.add(Zyro);
+		// Gang member 3
+		NonPlayerCharacter Lurc = new NonPlayerCharacter("Lurc", 17, 9, 28,
+				"Philip's word is law here. Time to learn that the hard way.", true);
+		addItemsToNPC(List.of("battleaxe"), List.of("splint mail"), List.of("shield, large, wooden"), Lurc);
+		npcsInnOfTheBoar.add(Lurc);
+
+		innOfTheBoar.setNpcs(npcsInnOfTheBoar, true);
 
 		// Castle Drawbridge
 		// hostile

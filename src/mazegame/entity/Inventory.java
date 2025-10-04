@@ -126,6 +126,10 @@ public class Inventory {
 		String gold = this.gold.toString();
 		sb.append(gold).append('\n');
 
+		// Miscellaneous items (keys, banners, etc.)
+		String misc = availableItemsByType(mazegame.entity.item.MiscellaneousItem.class).trim();
+		appendCategory(sb, "Misc", misc);
+
 		return sb.toString();
 	}
 

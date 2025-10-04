@@ -11,7 +11,7 @@ public class MovementState extends CommandState {
         this.getAvailableCommands().put("quit", new QuitCommand());
         this.getAvailableCommands().put("move", new MoveCommand());
         this.getAvailableCommands().put("look", new LookCommand());
-        //this.getAvailableCommands().put("unlock", new UnlockCommand());
+        this.getAvailableCommands().put("unlock", new UnlockCommand());
         this.getAvailableCommands().put("attack", new AttackCommand());
 
         this.getAvailableCommands().put("pick", new GetItemCommand());

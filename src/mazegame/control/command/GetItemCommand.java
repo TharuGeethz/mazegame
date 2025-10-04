@@ -23,6 +23,17 @@ public class GetItemCommand implements Command {
 		}
 
 		String itemName = (String) userInput.getArguments().get(0);
+
+		// banner logic - can only be picked up after defeating all hostile NPCs
+		if ("banner".equals(itemName)) {
+			boolean hasLivingHostiles = currentPlayer.getCurrentLocation().getNpcCollection().values().stream()
+					.anyMatch(npc -> npc.isHostile() && npc.getLifePoints() > 0);
+			
+			if (hasLivingHostiles) {
+				return new CommandResponse("The banner is heavily guarded! You must defeat Philip and his gang before you can take it.");
+			}
+		}
+
 		// items
 		Map<String, Item> itemsInLocation = currentPlayer.getCurrentLocation().getInventory().getItemList();
 

@@ -16,6 +16,7 @@ public class Player extends Character {
 	public Player(String name, int strength, int agility, int lifePoints) {
         super(name, strength, agility, lifePoints);
 		this.setInventory(new FiniteInventory(strength));
+		this.npcCollection = new NonPlayerCharacterCollection();
 	}
 
 	public Location getCurrentLocation() {
