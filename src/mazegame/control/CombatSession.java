@@ -90,7 +90,7 @@ public class CombatSession {
 		return "Combat has ended.";
 	}
 
-	// ---------- Phases: pick ONE attacker each side ----------
+	// Phases: pick 1 attacker each side
 
 	private String playerPartyPhase() {
 		StringBuilder log = new StringBuilder("— Player Party Phase —\n");
@@ -184,7 +184,7 @@ public class CombatSession {
 			}
 			log.append("\n\n===== Round ").append(round).append(" =====\n");
 
-			// --- Player side (random: player or ally) ---
+			// Player side (random: player or ally)
 			log.append("— Player Party Phase —\n");
 			List<Character> party = new ArrayList<>();
 			if (thePlayer.getLifePoints() > 0)
@@ -219,7 +219,7 @@ public class CombatSession {
 				break;
 			}
 
-			// --- Enemy side (one random hostile) ---
+			// Enemy side (one random hostile)
 			log.append(enemyPartyPhase()).append("\n");
 			log.append(endOfTurnStatus()).append("\n");
 
@@ -238,8 +238,6 @@ public class CombatSession {
 			// not your turn: just advance until it is or combat ends
 			return advanceCombatUntilPlayerTurn();
 		}
-
-//		log.append("\n\n===== Round ").append(round).append(" =====\n");
 
 		// choose target
 		NonPlayerCharacter target = null;

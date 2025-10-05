@@ -11,12 +11,14 @@ public class LeavePartyCommand implements Command {
 
 	private static final String MSG_NO_PARTY = "You don't have a party to leave";
 	private static final String MSG_LEFT_PARTY = "You left the party";
-	private static final String MSG_HOSTILE_LOCATION = "Location occupied with enemies! You cannot leave your party here.";
 
 	public CommandResponse execute(ParsedInput userInput, Player currentPlayer) {
 
+		if (currentPlayer.inCombat()) {
+			return new CommandResponse("You can't leave party while in combat!");
+		}
+
 		final Location currentLocation = currentPlayer.getCurrentLocation();
-		final NonPlayerCharacterCollection npcsHere = currentLocation.getNpcCollection();
 		final NonPlayerCharacterCollection playerParty = currentPlayer.getNpcCollection();
 
 		if (playerParty.isEmpty()) {
