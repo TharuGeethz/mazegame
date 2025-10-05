@@ -89,13 +89,15 @@ public class TalkCommand implements Command {
 
 		// every NPC replies with a line
 
-		if (currentPlayer.getCurrentLocation().getNpcCollection().isHostileCollection()) {
-			currentPlayer.getCurrentLocation().getNpcCollection().values().forEach(npc -> {
+		if (!currentPlayer.getCurrentLocation().getNpcCollection().getNPCsByHostility(true).isEmpty()) {
+			currentPlayer.getCurrentLocation().getNpcCollection().getNPCsByHostility(true).forEach(npc -> {
 				printDialogueLine(npc.getName(), ": " + pick(HOSTILE_NPC_REPLIS));
 				sleepFor(250);
 			});
-		} else {
-			currentPlayer.getCurrentLocation().getNpcCollection().values().forEach(npc -> {
+		}
+
+		if (!currentPlayer.getCurrentLocation().getNpcCollection().getNPCsByHostility(false).isEmpty()) {
+			currentPlayer.getCurrentLocation().getNpcCollection().getNPCsByHostility(false).forEach(npc -> {
 				printDialogueLine(npc.getName(), ": " + pick(FRIENDLY_NPC_REPLIES));
 				sleepFor(250);
 			});

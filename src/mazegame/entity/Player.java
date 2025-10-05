@@ -3,8 +3,6 @@ package mazegame.entity;
 import mazegame.control.CombatSession;
 import mazegame.entity.utility.NonPlayerCharacterCollection;
 
-import java.util.HashMap;
-
 public class Player extends Character {
 
 	private Location currentLocation;
@@ -12,9 +10,13 @@ public class Player extends Character {
 
 	private CombatSession combatSession;
 
+	public Player(String name) {
+		super(name);
+		this.npcCollection = new NonPlayerCharacterCollection();
+	}
 
 	public Player(String name, int strength, int agility, int lifePoints) {
-        super(name, strength, agility, lifePoints);
+		super(name, strength, agility, lifePoints);
 		this.setInventory(new FiniteInventory(strength));
 		this.npcCollection = new NonPlayerCharacterCollection();
 	}
@@ -26,31 +28,26 @@ public class Player extends Character {
 	public void setCurrentLocation(Location currentLocation) {
 		this.currentLocation = currentLocation;
 	}
-	
+
 	public CombatSession getCombatSession() {
-	    return combatSession;
+		return combatSession;
 	}
 
 	public void setCombatSession(CombatSession combatSession) {
-	    this.combatSession = combatSession;
+		this.combatSession = combatSession;
 	}
 
 	public boolean inCombat() {
-	    return combatSession != null && !combatSession.isOver();
+		return combatSession != null && !combatSession.isOver();
 	}
 
-	
-    public NonPlayerCharacterCollection getNpcCollection() {
-        return npcCollection;
-    }
+	public NonPlayerCharacterCollection getNpcCollection() {
+		return npcCollection;
+	}
 
-    public void setNpcCollection(NonPlayerCharacterCollection npcCollection) {
-        
-        this.npcCollection = npcCollection;
-    }
+	public void setNpcCollection(NonPlayerCharacterCollection npcCollection) {
 
+		this.npcCollection = npcCollection;
+	}
 
-
-	
-	
 }

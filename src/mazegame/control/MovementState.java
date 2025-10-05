@@ -5,8 +5,7 @@ import mazegame.entity.Blacksmith;
 import mazegame.entity.Player;
 
 public class MovementState extends CommandState {
-    public MovementState()
-    {
+    public MovementState() {
         this.getAvailableCommands().put("go", new MoveCommand());
         this.getAvailableCommands().put("quit", new QuitCommand());
         this.getAvailableCommands().put("move", new MoveCommand());
@@ -25,7 +24,8 @@ public class MovementState extends CommandState {
         this.getAvailableCommands().put("leave", new LeavePartyCommand());
         this.getAvailableCommands().put("use", new UsePotionCommand());
         this.getAvailableCommands().put("talk", new TalkCommand());
-       this.getAvailableCommands().put("help", new HelpCommand());
+        this.getAvailableCommands().put("help", new HelpCommand());
+        this.getAvailableCommands().put("check", new CheckCommand());
     }
 
     public CommandState update(Player thePlayer) {

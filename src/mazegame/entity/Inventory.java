@@ -3,8 +3,12 @@ package mazegame.entity;
 import java.util.HashMap;
 import java.util.List;
 
+import mazegame.entity.item.Armor;
 import mazegame.entity.item.HealingPotion;
 import mazegame.entity.item.Item;
+import mazegame.entity.item.MiscellaneousItem;
+import mazegame.entity.item.Shield;
+import mazegame.entity.item.Weapon;
 
 public class Inventory {
 	private Money gold;
@@ -107,15 +111,15 @@ public class Inventory {
 		StringBuilder sb = new StringBuilder();
 
 		// Weapons
-		String weapons = availableItemsByType(mazegame.entity.item.Weapon.class).trim();
+		String weapons = availableItemsByType(Weapon.class).trim();
 		appendCategory(sb, "Weapons", weapons);
 
 		// Armors
-		String armors = availableItemsByType(mazegame.entity.item.Armor.class).trim();
+		String armors = availableItemsByType(Armor.class).trim();
 		appendCategory(sb, "Armors", armors);
 
 		// Shields
-		String shields = availableItemsByType(mazegame.entity.item.Shield.class).trim();
+		String shields = availableItemsByType(Shield.class).trim();
 		appendCategory(sb, "Shields", shields);
 
 		// Potions
@@ -127,7 +131,7 @@ public class Inventory {
 		sb.append(gold).append('\n');
 
 		// Miscellaneous items (keys, banners, etc.)
-		String misc = availableItemsByType(mazegame.entity.item.MiscellaneousItem.class).trim();
+		String misc = availableItemsByType(MiscellaneousItem.class).trim();
 		appendCategory(sb, "Misc", misc);
 
 		return sb.toString();

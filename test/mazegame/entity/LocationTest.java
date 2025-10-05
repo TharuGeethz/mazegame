@@ -45,7 +45,7 @@ public class LocationTest {
         npcs.add(hostile);
         
         location.setNpcs(npcs, true); // Set as hostile collection
-        assertTrue(location.getNpcCollection().isHostileCollection(), "Should be marked as hostile collection");
+        assertTrue(location.getNpcCollection().hasHostileNPCs(), "Should be marked as hostile collection");
         assertEquals(2, location.getNpcCollection().size(), "Should contain both NPCs");
         assertTrue(location.getNpcCollection().hasNPC("guide"), "Should contain guide (case insensitive)");
         assertTrue(location.getNpcCollection().hasNPC("orc"), "Should contain orc (case insensitive)");

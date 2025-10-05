@@ -41,7 +41,6 @@ public class Location {
 	}
 
 	public void setNpcs(List<NonPlayerCharacter> npcs, boolean isHostile) {
-		this.npcCollection.setHostileCollection(isHostile);
 		for (NonPlayerCharacter npc : npcs) {
 			this.npcCollection.put(npc.getName().toLowerCase(), npc);
 		}

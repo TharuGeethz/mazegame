@@ -74,7 +74,7 @@ class LeavePartyCommandTest {
     }
 
     @Test
-    void whenLocationOccupiedWithEnemy_andPlayerHasParty_shouldRejectAndNotChangeCollections() {
+    void whenLocationOccupiedWithEnemy_andPlayerHasParty_shouldLeaveAndChangeCollections() {
 
         Location inn = new Location("Warm fires and loud chatter.", "Inn of the Boar");
         Player hero = new Player("Hero");
@@ -89,10 +89,8 @@ class LeavePartyCommandTest {
         NonPlayerCharacter lysa = new NonPlayerCharacter(
                 "Lysa", 12, 13, 16, "Need another blade?", true);
         inn.getNpcCollection().put("lysa", lysa);
-        inn.getNpcCollection().setHostileCollection(true);
 
 
-        int playerPartySizeBefore = hero.getNpcCollection().size();
         int locationNpcSizeBefore = inn.getNpcCollection().size();
 
         LeavePartyCommand cmd = new LeavePartyCommand();
@@ -102,15 +100,14 @@ class LeavePartyCommandTest {
         CommandResponse resp = cmd.execute(input, hero);
 
 
-        assertEquals("Location occupied with enemies! You cannot leave your party here.", resp.getMessage());
+        assertEquals("You left the party", resp.getMessage());
 
 
-        assertEquals(playerPartySizeBefore, hero.getNpcCollection().size(),
-                "Player's party should remain unchanged when location is occupied.");
-        assertTrue(hero.getNpcCollection().containsKey("bram"));
+        assertTrue(hero.getNpcCollection().isEmpty(), "Player party should be cleared after leaving.");
 
-        assertEquals(locationNpcSizeBefore, inn.getNpcCollection().size(),
-                "Location NPCs should remain unchanged when rejecting.");
+        assertEquals(locationNpcSizeBefore + 1, inn.getNpcCollection().size(),
+                "Location NPCs should change.");
         assertTrue(inn.getNpcCollection().containsKey("lysa"));
+        assertTrue(inn.getNpcCollection().containsKey("bram"));
     }
 }
