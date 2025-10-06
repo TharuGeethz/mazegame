@@ -11,8 +11,4 @@ public class Armor extends Item {
 	public int getBonus() {
 		return bonus;
 	}
-
-	public void setBonus(int bonus) {
-		this.bonus = bonus;
-	}
 }

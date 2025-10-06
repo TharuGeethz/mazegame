@@ -9,10 +9,6 @@ public class Weapon extends Item {
          this.damage = damage;
     }
 
-    public void setDamage(String damage) {
-        this.damage = damage;
-    }
-
     public String getDamage() {
         return damage;
     }

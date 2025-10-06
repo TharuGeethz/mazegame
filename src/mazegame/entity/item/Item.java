@@ -7,15 +7,7 @@ public abstract class Item {
     private double weight;
     private String label;
     private String description;
-    
-    public Item() {
 
-    } 
-    
-    public Item(int value) {
-        this.value = value; 
-    } 
-    
     public Item(String label, String description) {
         this.label = label;
         this.description = description;

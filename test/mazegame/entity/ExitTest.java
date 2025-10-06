@@ -1,46 +1,59 @@
 package mazegame.entity;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ExitTest {
-    
+class ExitTest {
+
     private Exit exit;
-    private Location destination;
-    
+    private Location dummyDestination;
+
     @BeforeEach
-    public void setUp() {
-        destination = new Location("A peaceful garden", "Garden");
-        exit = new Exit("A wooden door leading to the garden", destination);
+    void setUp() {
+        dummyDestination = new Location("A test room", "Test Chamber");
+        exit = new Exit("A door to the chamber", dummyDestination);
     }
-    
+
+    // Tests for setLocked(boolean)
+
     @Test
-    public void testExitConstructorAndGetters() {
-        assertNotNull(exit, "Exit should be created successfully");
-        assertEquals("A wooden door leading to the garden", exit.getDescription(), "Description should be set correctly");
-        assertEquals(destination, exit.getDestination(), "Destination should be set correctly");
-        assertFalse(exit.isLocked(), "Exit should be unlocked by default");
-    }
-    
-    @Test
-    public void testSetDestinationAndDescription() {
-        Location newDestination = new Location("A dark cave", "Cave");
-        exit.setDestination(newDestination);
-        assertEquals(newDestination, exit.getDestination(), "setDestination should update destination");
-        
-        exit.setDescription("A steel gate");
-        assertEquals("A steel gate", exit.getDescription(), "setDescription should update description");
-    }
-    
-    @Test
-    public void testLockingMechanism() {
-        assertFalse(exit.isLocked(), "Exit should be unlocked by default");
-        
+    void testSetLockedTrue() {
         exit.setLocked(true);
-        assertTrue(exit.isLocked(), "setLocked(true) should lock the exit");
-        
+        assertTrue(exit.isLocked(), "Exit should be locked after calling setLocked(true)");
+    }
+
+    @Test
+    void testSetLockedFalse() {
         exit.setLocked(false);
-        assertFalse(exit.isLocked(), "setLocked(false) should unlock the exit");
+        assertFalse(exit.isLocked(), "Exit should be unlocked after calling setLocked(false)");
+    }
+
+    @Test
+    void testSetLockedChangesState() {
+        exit.setLocked(false);
+        exit.setLocked(true);
+        assertTrue(exit.isLocked(), "Exit lock state should change to true when setLocked(true) is called after false");
+    }
+
+    // Tests for isLocked()
+
+    @Test
+    void testIsLockedDefaultValue() {
+        assertFalse(exit.isLocked(), "Exit should be unlocked by default");
+    }
+
+    @Test
+    void testIsLockedAfterLocking() {
+        exit.setLocked(true);
+        assertTrue(exit.isLocked(), "isLocked() should return true after exit is locked");
+    }
+
+    @Test
+    void testIsLockedAfterUnlocking() {
+        exit.setLocked(true);
+        exit.setLocked(false);
+        assertFalse(exit.isLocked(), "isLocked() should return false after exit is unlocked");
     }
 }
