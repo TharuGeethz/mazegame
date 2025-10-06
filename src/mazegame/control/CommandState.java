@@ -19,10 +19,6 @@ public abstract class CommandState {
 		return this.availableCommands;
 	}
 
-	public void setAvailableCommands(HashMap<String, Command> hashmap) {
-		availableCommands = hashmap;
-	}
-
 	public Command getCommand(String commandLabel) {
 		return availableCommands.get(commandLabel);
 	}

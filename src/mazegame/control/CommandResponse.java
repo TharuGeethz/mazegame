@@ -17,11 +17,6 @@ public class CommandResponse
             finishedGame = quitFlag;
         }
 
-        public void setFinishedGame(Boolean quitFlag)
-        {
-            finishedGame = quitFlag;
-        }
-        
         public boolean isFinishedGame()
         {
         	return finishedGame;
@@ -31,7 +26,7 @@ public class CommandResponse
         {
             return message;
         }
-        
+
         public void setMessage(String message)
         {
         	this.message = message;
