@@ -17,7 +17,7 @@ public class SeeStatusCommand implements Command {
         response.append("═══════════════════════════════════════\n\n");
         
         // Player Status
-        response.append("📍 PLAYER STATUS:\n");
+        response.append("PLAYER STATUS:\n");
         response.append("   Name: ").append(thePlayer.getName()).append("\n");
         response.append("   Location: ").append(thePlayer.getCurrentLocation().getLabel()).append("\n");
         response.append("   Health: ").append(thePlayer.getLifePoints()).append(" HP\n");
@@ -28,14 +28,14 @@ public class SeeStatusCommand implements Command {
         
         // Combat Status
         if (thePlayer.inCombat()) {
-            response.append("   ⚔️ Status: IN COMBAT\n");
+            response.append("   Status: IN COMBAT\n");
         } else {
-            response.append("   ✅ Status: Peaceful\n");
+            response.append("   Status: Peaceful\n");
         }
         response.append("\n");
         
         // Party Status
-        response.append("🤝 PARTY STATUS:\n");
+        response.append("PARTY STATUS:\n");
         if (thePlayer.getNpcCollection().isEmpty()) {
             response.append("   No allies in party\n");
         } else {
@@ -60,7 +60,7 @@ public class SeeStatusCommand implements Command {
         response.append("\n");
         
         // Maze stsatus
-        response.append("🌍 MAZE STATUS:\n");
+        response.append("MAZE STATUS:\n");
         int locationCount = GameStatus.getInstance().getLocations().size();
         int shopCount = GameStatus.getInstance().getShops().size();
         response.append("   Total locations: ").append(locationCount).append("\n");
@@ -89,9 +89,9 @@ public class SeeStatusCommand implements Command {
         response.append("\n");
         
         // Key Items Status
-        response.append("🗝️ IMPORTANT ITEMS:\n");
+        response.append("IMPORTANT ITEMS:\n");
         boolean hasBanner = thePlayer.hasItem("banner");
-        response.append("   Banner: ").append(hasBanner ? "✅ OBTAINED" : "❌ Not found").append("\n");
+        response.append("   Banner: ").append(hasBanner ? "OBTAINED" : "Not found").append("\n");
 
         if (!hasBanner) {
             // Check if Philip and gang are defeated at Inn of the Boar
@@ -106,21 +106,21 @@ public class SeeStatusCommand implements Command {
                     }
                 }
                 if (!philipDefeated) {
-                    response.append("   💡 Hint: Defeat Philip's gang at Inn of the Boar (").append(hostilesAlive).append(" enemies remain)\n");
+                    response.append("   Hint: Defeat Philip's gang at Inn of the Boar (").append(hostilesAlive).append(" enemies remain)\n");
                 } else {
-                    response.append("   💡 Hint: Banner is now available at Inn of the Boar!\n");
+                    response.append("   Hint: Banner is now available at Inn of the Boar!\n");
                 }
             }
         }
         response.append("\n");
         
         // Mission Progress
-        response.append("🎯 MISSION PROGRESS:\n");
+        response.append("MISSION PROGRESS:\n");
         Location castleDrawbridge = GameStatus.getInstance().getLocations().get("Castle Drawbridge");
         boolean reachedCastle = thePlayer.getCurrentLocation().equals(castleDrawbridge);
         
         if (reachedCastle) {
-            response.append("   ✅ Reached Gregor's Castle!\n");
+            response.append("   Reached Gregor's Castle!\n");
             // Check if there are still enemies at the castle
             int castleEnemies = 0;
             for (NonPlayerCharacter npc : castleDrawbridge.getNpcCollection().values()) {
@@ -129,18 +129,18 @@ public class SeeStatusCommand implements Command {
                 }
             }
             if (castleEnemies > 0) {
-                response.append("   ⚔️ Castle guards remaining: ").append(castleEnemies).append("\n");
-                response.append("   🎯 Objective: Defeat Gregor and his guards!\n");
+                response.append("   Castle guards remaining: ").append(castleEnemies).append("\n");
+                response.append("   Objective: Defeat Gregor and his guards!\n");
             } else {
-                response.append("   👑 Castle cleared! Victory may be within reach!\n");
+                response.append("   Castle cleared! Victory may be within reach!\n");
             }
         } else {
             if (hasBanner) {
-                response.append("   🗝️ Banner obtained - ready to unlock castle entrances!\n");
-                response.append("   🎯 Objective: Go to Town Square or Crystal Cave and unlock path to castle\n");
+                response.append("   Banner obtained - ready to unlock castle entrances!\n");
+                response.append("   Objective: Go to Town Square or Crystal Cave and unlock path to castle\n");
             } else {
-                response.append("   🎯 Primary Objective: Find the banner to access Gregor's castle\n");
-                response.append("   📍 Next step: Defeat Philip and his gang at Inn of the Boar\n");
+                response.append("   Primary Objective: Find the banner to access Gregor's castle\n");
+                response.append("   Next step: Defeat Philip and his gang at Inn of the Boar\n");
             }
         }
         
