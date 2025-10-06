@@ -24,11 +24,11 @@ public class MoneyTest {
     
     @Test
     public void testSubtractValidAndInvalidAmounts() {
-        boolean result = money.Subtract(40);
+        boolean result = money.subtract(40);
         assertTrue(result, "Subtracting valid amount should return true");
         assertEquals(60, money.getTotal(), "Total should be reduced by subtracted amount");
         
-        boolean invalidResult = money.Subtract(150);
+        boolean invalidResult = money.subtract(150);
         assertFalse(invalidResult, "Subtracting more than available should return false");
         assertEquals(60, money.getTotal(), "Total should remain unchanged when subtraction fails");
     }

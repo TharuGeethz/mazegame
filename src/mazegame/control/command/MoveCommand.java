@@ -12,7 +12,7 @@ public class MoveCommand implements Command {
 			return new CommandResponse("You can't move while in combat!");
 		}
 
-		if (userInput.getArguments().size() == 0) {
+		if (userInput.getArguments().isEmpty()) {
 			return new CommandResponse("If you want to move you need to tell me where.");
 		}
 		String exitLabel = (String) userInput.getArguments().get(0);

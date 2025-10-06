@@ -22,11 +22,11 @@ public class Inventory {
 	}
 
 	public void addMoney(int goldPieces) {
-		gold.Add(goldPieces);
+		gold.add(goldPieces);
 	}
 
 	public boolean removeMoney(int goldPieces) {
-		return gold.Subtract(goldPieces);
+		return gold.subtract(goldPieces);
 	}
 
 	public boolean addItem(Item theItem) {

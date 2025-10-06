@@ -12,6 +12,7 @@ public class Player extends Character {
 
 	public Player(String name) {
 		super(name);
+		this.setInventory(new FiniteInventory(10)); //average human strength
 		this.npcCollection = new NonPlayerCharacterCollection();
 	}
 

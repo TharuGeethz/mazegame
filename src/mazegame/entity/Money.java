@@ -11,11 +11,11 @@ public class Money {
 		this.total = total;
 	}
 
-	public void Add(int amount) {
+	public void add(int amount) {
 		total += amount;
 	}
 
-	public boolean Subtract(int amount) {
+	public boolean subtract(int amount) {
 		if (amount > total)
 			return false;
 		total -= amount;
