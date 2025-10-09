@@ -10,6 +10,7 @@ import mazegame.entity.Blacksmith;
 import mazegame.entity.Exit;
 import mazegame.entity.GameStatus;
 import mazegame.entity.Location;
+import mazegame.entity.Money;
 import mazegame.entity.NonPlayerCharacter;
 import mazegame.entity.ShieldFactory;
 import mazegame.entity.WeaponFactory;
@@ -24,27 +25,35 @@ import mazegame.entity.utility.AgilityTable;
 import mazegame.entity.utility.StrengthTable;
 import mazegame.entity.utility.WeightLimit;
 
+/**
+ * Hard coded data initializer. Builds items, NPCs, locations, exits and lookup
+ * tables for a player map.
+ */
 public class HardCodedData implements IMazeData {
-	private Location forestClearing;
+	private Location forestClearing; // starting location reference
 
+	// construct and load all static data
 	public HardCodedData() {
-		loadWeapons();
-		loadArmors();
-		loadShields();
-		loadWeightLimits();
-		loadAgilityModifiers();
-		loadStrengthModifiers();
-		createLocations();
+		loadWeapons(); // weapon catalog
+		loadArmors(); // armor catalog
+		loadShields(); // shield catalog
+		loadWeightLimits(); // carry capacity table
+		loadAgilityModifiers(); // agility modifiers
+		loadStrengthModifiers(); // strength modifiers
+		createLocations(); // map, exits, items, NPCs
 	}
 
+	// return the initial player location
 	public Location getStartingLocation() {
 		return forestClearing;
 	}
 
+	// welcome banner text
 	public String getWelcomeMessage() {
 		return "Welcome to the Mount Helanous!  Find the banner, reach the castle and defeat Gregor!";
 	}
 
+	// build locations, connect exits, add items and NPCs
 	private void createLocations() {
 		forestClearing = new Location(
 				"A quiet forest clearing with a dying campfire and trampled grass. Paths lead out through the trees.",
@@ -61,36 +70,37 @@ public class HardCodedData implements IMazeData {
 		Location whisperingMarsh = new Location(
 				"The air is thick and damp, filled with the croak of unseen creatures. Strange mists curl around twisted trees, and travelers swear they hear voices calling their names.",
 				"Whispering Marsh");
+
 		Location townSquare = new Location(
 				"The bustling heart of Mount Helenis. A notice board, a fountain, and crowds of traders.",
 				"Town Square");
+
 		Location innOfTheBoar = new Location(
-				"A warm, noisy tavern filled with chatter. A boar crest hangs above the bar.", "Inn of the Boar");
+				"A warm, noisy tavern filled with chatter. A boar crest hangs above the bar. Don't forget your banner!",
+				"Inn of the Boar");
 
 		Blacksmith forgeOfHelan = new Blacksmith(
 				"A fire-bright forge. Racks of blades and armor line the walls. The smith eyes your gear.",
 				"Forge of Helan");
-		Location eastMarket = new Location(
-				"Stalls spill onto the street: cloth, herbs, trinkets—and the occasional shady deal.", "East Market");
+
 		Blacksmith titansAnvil = new Blacksmith(
 				"Compact smithy south to the inn. Practical gear, fair prices, fewer questions.", "The Titan's Anvil");
 
 		Location crystalCave = new Location(
 				"The Cave walls sparkle with embedded crystals, casting rainbow reflections across the stone. The beauty is breathtaking, but the dripping of unseen water echoes eerily.",
 				"Crystal Cave");
+
 		Location castleDrawbridge = new Location(
 				"The looming walls of Gregor’s castle. A raised drawbridge blocks the only entrance.",
 				"Castle Drawbridge");
 
-		// Connect Locations
-		// north, south, east, west, northeast, northwest, southeast, and southwest, up
-		// or down.
+		// connect locations with exits
 
 		// Forest Clearing <-> Whispering Marsh
 		forestClearing.getExitCollection().addExit("south",
 				new Exit("A packed-dirt road lies to the south into Whispering Marsh.", whisperingMarsh));
 		whisperingMarsh.getExitCollection().addExit("north",
-				new Exit("The forest opens into a quiet clearing.", forestClearing));
+				new Exit("The path opens into a quiet forest clearing.", forestClearing));
 
 		// Forest Clearing <-> Echoing Catacombs
 		forestClearing.getExitCollection().addExit("west",
@@ -110,12 +120,6 @@ public class HardCodedData implements IMazeData {
 		townSquare.getExitCollection().addExit("north",
 				new Exit("The road back toward the Whispering Marsh.", whisperingMarsh));
 
-		// Whispering Marsh <-> East Market
-		whisperingMarsh.getExitCollection().addExit("east",
-				new Exit("Market chatter drifts from the east.", eastMarket));
-		eastMarket.getExitCollection().addExit("west",
-				new Exit("The main road runs back to the west into Whispering Marsh.", whisperingMarsh));
-
 		// Town Square <-> Inn of the Boar
 		townSquare.getExitCollection().addExit("east", new Exit("The inn’s lanterns glow invitingly.", innOfTheBoar));
 		innOfTheBoar.getExitCollection().addExit("west", new Exit("You step back into the town square.", townSquare));
@@ -131,18 +135,12 @@ public class HardCodedData implements IMazeData {
 				new Exit("A rear door opens to a yard and smithy.", titansAnvil));
 		titansAnvil.getExitCollection().addExit("north", new Exit("A back path leads toward the inn.", innOfTheBoar));
 
-		// Town Square <-> Castle Drawbridge
-		// townSquare.getExitCollection().addExit("southwest",
-		// 		new Exit("The road climbs toward the Gregor's castle.", castleDrawbridge));
-		// castleDrawbridge.getExitCollection().addExit("northeast",
-		// 		new Exit("The town square is just near by.", townSquare));
-
-		// Town Square <-> Castle Drawbridge
-        Exit townToCastle = new Exit("The road climbs toward the Gregor's castle.", castleDrawbridge);
-        townToCastle.setLocked(true); // Lock castle entrance
-        townSquare.getExitCollection().addExit("southwest", townToCastle);
-        castleDrawbridge.getExitCollection().addExit("northeast",
-                new Exit("The town square is just near by.", townSquare));
+		// Town Square <-> Castle Drawbridge with lock
+		Exit townToCastle = new Exit("The road climbs toward the Gregor's castle.", castleDrawbridge);
+		townToCastle.setLocked(true); // locked until banner condition
+		townSquare.getExitCollection().addExit("southwest", townToCastle);
+		castleDrawbridge.getExitCollection().addExit("northeast",
+				new Exit("The town square is just near by.", townSquare));
 
 		// Town Square <-> Crystal Cave
 		townSquare.getExitCollection().addExit("south",
@@ -150,55 +148,48 @@ public class HardCodedData implements IMazeData {
 		crystalCave.getExitCollection().addExit("north",
 				new Exit("You follow the tunnel upward and emerge into the bustling town square.", townSquare));
 
-		// Crystal Cave <-> Castle Drawbridge
-		// crystalCave.getExitCollection().addExit("west",
-		// 		new Exit("A rough stone passage leads toward the looming shape of Gregor’s castle.", castleDrawbridge));
-		// castleDrawbridge.getExitCollection().addExit("east", new Exit(
-		// 		"You leave the shadow of the castle and descend into the glittering crystal cave.", crystalCave));
+		// Crystal Cave <-> Castle Drawbridge with lock
+		Exit caveToCastle = new Exit("A rough stone passage leads toward the looming shape of Gregor's castle.",
+				castleDrawbridge);
+		caveToCastle.setLocked(true); // locked until banner condition
+		crystalCave.getExitCollection().addExit("west", caveToCastle);
+		castleDrawbridge.getExitCollection().addExit("east", new Exit(
+				"You leave the shadow of the castle and descend into the glittering crystal cave.", crystalCave));
 
-		Exit caveToCastle = new Exit("A rough stone passage leads toward the looming shape of Gregor's castle.", castleDrawbridge);
-        caveToCastle.setLocked(true); // Lock castle entrance
-        crystalCave.getExitCollection().addExit("west", caveToCastle);
-        castleDrawbridge.getExitCollection().addExit("east", new Exit(
-                "You leave the shadow of the castle and descend into the glittering crystal cave.", crystalCave));
-
-		// Adding items to locations
+		// place items in locations
 
 		// Forest Clearing
-		addItemsToLocation(List.of("nunchaku", "dagger"), List.of("leather"), List.of("shield, large, wooden"),
+		addItemsToLocation(List.of("nunchaku", "dagger"), List.of("leather"), List.of("shield, small, wooden"),
 				forestClearing);
 
 		// Echoing Catacombs
-		addItemsToLocation(List.of("waraxe, dwarven", "warhammer"), List.of(), List.of(), echoingCatacombs);
+		addItemsToLocation(List.of("waraxe, dwarven", "flail, light", "warhammer"), List.of(), List.of(),
+				echoingCatacombs);
+		echoingCatacombs.getInventory().setGold(new Money(500)); // stash gold
 
 		// Oakheart Village
 		addItemsToLocation(List.of("trident"), List.of(), List.of(), oakheartVillage);
+
 		// Whispering Marsh
 		addItemsToLocation(List.of("axe, throwing", "greatclub"), List.of("hide"), List.of(), whisperingMarsh);
 
-		// East Market
-		addItemsToLocation(List.of("guisarme", "flail, light", "longspear"), List.of("scale mail"),
-				List.of("shield, small, wooden"), eastMarket);
-
 		// Town Square
-		addItemsToLocation(List.of("rapier", "flail, heavy"), List.of("chainmail"),
-				List.of("shield, small, steel", "shield, large, steel"), townSquare);
+		addItemsToLocation(List.of("rapier", "flail, heavy"), List.of("chainmail"), List.of("shield, small, steel"),
+				townSquare);
 
-		// Forge of Helan (shop)
-
+		// Forge of Helan [Shop]
 		addItemsToLocation(List.of("greatsword", "greataxe", "sword, two-bladed", "falchion"),
-				List.of("full plate", "half-plate", "banded mail"), List.of(), forgeOfHelan);
+				List.of("full plate", "half-plate", "banded mail"), List.of("shield, large, steel"), forgeOfHelan);
 
 		// The Titan's Anvil [Shop]
 		addItemsToLocation(List.of("halberd", "battleaxe", "longsword", "scimitar"),
 				List.of("splint mail", "breastplate"), List.of(), titansAnvil);
 
 		// Inn of the Boar
-		addItemsToLocation(List.of("sword, short", "handaxe"), List.of("studded leather"), List.of("buckler"),
-				innOfTheBoar);
-
-		// Add the banner (can be picked up only after defeating all hostile NPCs)
-		MiscellaneousItem banner = new MiscellaneousItem("banner", 1000, 1);
+		addItemsToLocation(List.of("sword, short", "longspear", "guisarme", "handaxe"),
+				List.of("studded leather", "scale mail"), List.of("buckler", "shield, large, wooden"), innOfTheBoar);
+		innOfTheBoar.getInventory().setGold(new Money(1000)); // gold
+		MiscellaneousItem banner = new MiscellaneousItem("banner", 1000, 1); // quest item
 		innOfTheBoar.getInventory().addItem(banner);
 
 		// Crystal Cave
@@ -209,12 +200,11 @@ public class HardCodedData implements IMazeData {
 		addItemsToLocation(List.of("scythe"), List.of("padded"), List.of(), castleDrawbridge);
 
 		// add healing potions
-
 		forestClearing.getInventory()
 				.addPotion(new HealingPotion("elixir of vitality", "Restores health and boosts stamina temporarily."));
 		townSquare.getInventory()
 				.addPotion(new HealingPotion("sacred flask", "A blessed potion said to heal wounds instantly."));
-		eastMarket.getInventory().addPotion(new HealingPotion("moonflower extract",
+		townSquare.getInventory().addPotion(new HealingPotion("moonflower extract",
 				"A glowing liquid made from rare moonflowers, heals swiftly under moonlight."));
 		innOfTheBoar.getInventory().addPotion(new HealingPotion("dwarven tonic",
 				"A strong brew favored by dwarves, restores health and hardens resolve."));
@@ -225,19 +215,18 @@ public class HardCodedData implements IMazeData {
 		castleDrawbridge.getInventory().addPotion(new HealingPotion("dragonfruit brew",
 				"A fiery red potion brewed from dragonfruit, heals and invigorates."));
 
-		// =====Add NPCs to locations====
+		// add NPCs to locations
 
-		// Echoing Catacombs
-		// Hostile NPCs
+		// Echoing Catacombs hostile NPCs
 		List<NonPlayerCharacter> npcsEchoing = new java.util.ArrayList<>();
 
-		NonPlayerCharacter Shade = new NonPlayerCharacter("Shade", 5, 10, 18,
+		NonPlayerCharacter Shade = new NonPlayerCharacter("Shade", 10, 10, 18,
 				"Footsteps… not yours. Turn back while you can.", true);
 		addItemsToNPC(java.util.List.of("rapier"), java.util.List.of("chain shirt"), java.util.List.of("buckler"),
 				Shade);
 		npcsEchoing.add(Shade);
 
-		NonPlayerCharacter Bone = new NonPlayerCharacter("Bone", 12, 10, 20, "The dead are restless—and so am I.",
+		NonPlayerCharacter Bone = new NonPlayerCharacter("Bone", 12, 10, 15, "The dead are restless—and so am I.",
 				true);
 		addItemsToNPC(java.util.List.of("scythe"), java.util.List.of("hide"),
 				java.util.List.of("shield, small, wooden"), Bone);
@@ -245,8 +234,7 @@ public class HardCodedData implements IMazeData {
 
 		echoingCatacombs.setNpcs(npcsEchoing, true);
 
-		// Oakheart Village
-		// Friendly NPCs
+		// Oakheart Village allies
 		java.util.List<NonPlayerCharacter> npcsOakheart = new java.util.ArrayList<>();
 
 		NonPlayerCharacter Maeve = new NonPlayerCharacter("Maeve", 15, 12, 16,
@@ -257,7 +245,7 @@ public class HardCodedData implements IMazeData {
 		NonPlayerCharacter Rowan = new NonPlayerCharacter("Rowan", 22, 13, 17,
 				"Road’s clear to the east today. I’ll walk with you if you like.", false);
 		addItemsToNPC(java.util.List.of("longspear"), java.util.List.of("studded leather"),
-				java.util.List.of("shield, small, wooden"), Rowan);
+				java.util.List.of("shield, large, wooden"), Rowan);
 		npcsOakheart.add(Rowan);
 
 		NonPlayerCharacter Tamsin = new NonPlayerCharacter("Tamsin", 19, 11, 14,
@@ -267,47 +255,19 @@ public class HardCodedData implements IMazeData {
 
 		oakheartVillage.setNpcs(npcsOakheart, false);
 
-		// Whispering Marsh
-
-		// hostile NPCs
-		List<NonPlayerCharacter> npcsWhisperingMarsh = new ArrayList<>();
-
-		// Whispering Marsh — 3 hostile NPCs (one-word names)
-		NonPlayerCharacter Snar = new NonPlayerCharacter("Snar", 14, 10, 12,
-				"This swamp eats the weak. You look tasty.", true);
-		addItemsToNPC(List.of("handaxe"), List.of("leather"), List.of("shield, small, steel"), Snar);
-		npcsWhisperingMarsh.add(Snar);
-
-		NonPlayerCharacter Grit = new NonPlayerCharacter("Grit", 16, 9, 14,
-				"Move quick or the mud will have you for breakfast.", true);
-		addItemsToNPC(List.of("greataxe"), List.of("scale mail"), List.of("shield, large, wooden"), Grit);
-		npcsWhisperingMarsh.add(Grit);
-
-		NonPlayerCharacter Mire = new NonPlayerCharacter("Mire", 12, 11, 18,
-				"Keep your purse close, city-breed. We take what we like.", true);
-		addItemsToNPC(List.of("longspear"), List.of("studded leather"), List.of("buckler"), Mire);
-		npcsWhisperingMarsh.add(Mire);
-
-		whisperingMarsh.setNpcs(npcsWhisperingMarsh, true);
-
-		// Town Square
-		// allies
-
+		// Town Square allies
 		List<NonPlayerCharacter> npcsTownSquare = new ArrayList<>();
 
-		// Ally 1
 		NonPlayerCharacter Lysa = new NonPlayerCharacter("Lysa", 12, 13, 16,
 				"You look like you can handle yourself. Need another support blade?", false);
 		addItemsToNPC(List.of("rapier"), List.of("studded leather"), List.of("buckler"), Lysa);
 		npcsTownSquare.add(Lysa);
 
-		// Ally 2
 		NonPlayerCharacter Bram = new NonPlayerCharacter("Bram", 14, 11, 18,
 				"Gregor’s thugs bully these streets. I’m keen to push back.", false);
-		addItemsToNPC(List.of("longsword"), List.of("chain shirt"), List.of("shield, small, steel"), Bram);
+		addItemsToNPC(List.of("longsword"), List.of("chain shirt"), List.of("shield, large, steel"), Bram);
 		npcsTownSquare.add(Bram);
 
-		// Ally 3
 		NonPlayerCharacter Piper = new NonPlayerCharacter("Piper", 11, 14, 14,
 				"If you’re hunting trouble, I’ll watch your flank.", false);
 		addItemsToNPC(List.of("sword, short"), List.of("leather"), List.of("shield, small, wooden"), Piper);
@@ -315,8 +275,7 @@ public class HardCodedData implements IMazeData {
 
 		townSquare.setNpcs(npcsTownSquare, false);
 
-		// Crystal Cave
-		// allies
+		// Crystal Cave allies
 		List<NonPlayerCharacter> npcsCrystalCave = new ArrayList<>();
 
 		NonPlayerCharacter Quartz = new NonPlayerCharacter("Quartz", 13, 12, 17,
@@ -336,66 +295,57 @@ public class HardCodedData implements IMazeData {
 
 		crystalCave.setNpcs(npcsCrystalCave, false);
 
-		// Inn of the Boar
-		// hostile
+		// Inn of the Boar hostile group
 		List<NonPlayerCharacter> npcsInnOfTheBoar = new ArrayList<>();
 
-		// Philip
-		NonPlayerCharacter Philip = new NonPlayerCharacter("Philip", 18, 12, 35,
+		NonPlayerCharacter Philip = new NonPlayerCharacter("Philip", 18, 12, 20,
 				"You think you can waltz in here and take what's mine? I've crushed tougher fools than you.", true);
 		addItemsToNPC(List.of("greatsword"), List.of("full plate"), List.of("shield, large, steel"), Philip);
 		npcsInnOfTheBoar.add(Philip);
 
-		// Gang member 1
-		NonPlayerCharacter Thug = new NonPlayerCharacter("Thug", 16, 10, 25,
-				"Boss says you need a lesson. I'm here to teach it.", true);
-		addItemsToNPC(List.of("warhammer"), List.of("chainmail"), List.of("shield, small, steel"), Thug);
-		npcsInnOfTheBoar.add(Thug);
-		// Gang member 2
-		NonPlayerCharacter Zyro = new NonPlayerCharacter("Zyro", 14, 13, 22,
+		NonPlayerCharacter Zyro = new NonPlayerCharacter("Zyro", 14, 13, 12,
 				"You picked the wrong inn to cause trouble in.", true);
 		addItemsToNPC(List.of("longsword"), List.of("banded mail"), List.of("buckler"), Zyro);
 		npcsInnOfTheBoar.add(Zyro);
-		// Gang member 3
-		NonPlayerCharacter Lurc = new NonPlayerCharacter("Lurc", 17, 9, 28,
+
+		NonPlayerCharacter Lurc = new NonPlayerCharacter("Lurc", 17, 9, 10,
 				"Philip's word is law here. Time to learn that the hard way.", true);
 		addItemsToNPC(List.of("battleaxe"), List.of("splint mail"), List.of("shield, large, wooden"), Lurc);
 		npcsInnOfTheBoar.add(Lurc);
 
 		innOfTheBoar.setNpcs(npcsInnOfTheBoar, true);
 
-		// Castle Drawbridge
-		// hostile
+		// Castle Drawbridge boss group
 		List<NonPlayerCharacter> npcsDrawbridge = new ArrayList<>();
 
-		NonPlayerCharacter Brute = new NonPlayerCharacter("Brute", 18, 8, 30,
+		NonPlayerCharacter Brute = new NonPlayerCharacter("Brute", 16, 8, 14,
 				"You think you can pass? Not while I breathe.", true);
 		addItemsToNPC(List.of("greataxe"), List.of("chainmail"), List.of("shield, large, steel"), Brute);
 		npcsDrawbridge.add(Brute);
 
-		NonPlayerCharacter Karg = new NonPlayerCharacter("Karg", 17, 10, 28,
+		NonPlayerCharacter Karg = new NonPlayerCharacter("Karg", 18, 10, 16,
 				"Banner? Ha! we'll rip your arms off and sew them to ours.", true);
 		addItemsToNPC(List.of("greatsword"), List.of("full plate"), List.of("shield, large, steel"), Karg);
 		npcsDrawbridge.add(Karg);
 
-		NonPlayerCharacter Vorn = new NonPlayerCharacter("Vorn", 15, 12, 26,
+		NonPlayerCharacter Gregor = new NonPlayerCharacter("Gregor", 25, 12, 25,
 				"You smell like fear. Come closer so I can enjoy it.", true);
-		addItemsToNPC(List.of("halberd"), List.of("splint mail"), List.of("shield, large, wooden"), Vorn);
-		npcsDrawbridge.add(Vorn);
+		addItemsToNPC(List.of("halberd"), List.of("splint mail"), List.of("shield, large, wooden"), Gregor);
+		npcsDrawbridge.add(Gregor);
 
-		NonPlayerCharacter Rusk = new NonPlayerCharacter("Rusk", 16, 9, 27,
+		NonPlayerCharacter Rusk = new NonPlayerCharacter("Rusk", 15, 9, 19,
 				"Step up, fool; we'll teach you a lesson you won't forget.", true);
 		addItemsToNPC(List.of("warhammer"), List.of("banded mail"), List.of("shield, small, steel"), Rusk);
 		npcsDrawbridge.add(Rusk);
 
-		NonPlayerCharacter Thal = new NonPlayerCharacter("Thal", 14, 11, 25, "Banner or blood —  choose quickly.",
+		NonPlayerCharacter Thal = new NonPlayerCharacter("Thal", 14, 11, 19, "Banner or blood —  choose quickly.",
 				true);
 		addItemsToNPC(List.of("greatsword"), List.of("half-plate"), List.of("shield, large, steel"), Thal);
 		npcsDrawbridge.add(Thal);
 
 		castleDrawbridge.setNpcs(npcsDrawbridge, true);
 
-		// add locations to game status
+		// register all locations and shops
 		GameStatus.getInstance().addLocation(forestClearing);
 		GameStatus.getInstance().addLocation(echoingCatacombs);
 		GameStatus.getInstance().addLocation(oakheartVillage);
@@ -403,14 +353,12 @@ public class HardCodedData implements IMazeData {
 		GameStatus.getInstance().addLocation(townSquare);
 		GameStatus.getInstance().addLocation(innOfTheBoar);
 		GameStatus.getInstance().addShop(forgeOfHelan);
-		GameStatus.getInstance().addLocation(eastMarket);
 		GameStatus.getInstance().addShop(titansAnvil);
 		GameStatus.getInstance().addLocation(crystalCave);
 		GameStatus.getInstance().addLocation(castleDrawbridge);
 	}
 
-	// Create
-
+	// helper to add items to a location inventory
 	private void addItemsToLocation(List<String> weaponList, List<String> armorList, List<String> shieldList,
 			Location location) {
 		List<Item> itemsForLocation = new ArrayList<>();
@@ -420,10 +368,11 @@ public class HardCodedData implements IMazeData {
 				.forEach(armorLabel -> itemsForLocation.add(getArmor(armorLabel)));
 		shieldList.stream().filter(shieldLabel -> !shieldLabel.trim().isEmpty())
 				.forEach(shieldLabel -> itemsForLocation.add(getShield(shieldLabel)));
-		location.getInventory().addItems(itemsForLocation);
+		location.getInventory().addItems(itemsForLocation); // bulk add
 	}
 
-	private NonPlayerCharacter addItemsToNPC(List<String> weaponList, List<String> armorList, List<String> shieldList,
+	// helper to add items to an NPC inventory
+	private void addItemsToNPC(List<String> weaponList, List<String> armorList, List<String> shieldList,
 			NonPlayerCharacter npc) {
 		List<Item> itemsForNPC = new ArrayList<>();
 		weaponList.stream().filter(weaponLabel -> !weaponLabel.trim().isEmpty())
@@ -432,22 +381,25 @@ public class HardCodedData implements IMazeData {
 				.forEach(armorLabel -> itemsForNPC.add(getArmor(armorLabel)));
 		shieldList.stream().filter(shieldLabel -> !shieldLabel.trim().isEmpty())
 				.forEach(shieldLabel -> itemsForNPC.add(getShield(shieldLabel)));
-		npc.getInventory().addItems(itemsForNPC);
-		return npc;
+		npc.getInventory().addItems(itemsForNPC); // bulk add
 	}
 
+	// weapon lookup from factory
 	private Weapon getWeapon(String weaponLabel) {
 		return WeaponFactory.getInstance().getWeapon(weaponLabel);
 	}
 
+	// armor lookup from factory
 	private Armor getArmor(String armorLabel) {
 		return ArmorFactory.getInstance().getArmor(armorLabel);
 	}
 
+	// shield lookup from factory
 	private Shield getShield(String shieldLabel) {
 		return ShieldFactory.getInstance().getShield(shieldLabel);
 	}
 
+	// populate weapon catalog
 	private void loadWeapons() {
 		WeaponFactory weaponFactory = WeaponFactory.getInstance();
 		weaponFactory.addWeapon(new Weapon("dagger", 1, 2, "1d4"));
@@ -478,6 +430,7 @@ public class HardCodedData implements IMazeData {
 		weaponFactory.addWeapon(new Weapon("sword, two-bladed", 100, 15, "2d8"));
 	}
 
+	// populate armor catalog
 	private void loadArmors() {
 		ArmorFactory armorFactory = ArmorFactory.getInstance();
 		armorFactory.addArmor(new Armor("padded", 5, 10, 1));
@@ -494,6 +447,7 @@ public class HardCodedData implements IMazeData {
 		armorFactory.addArmor(new Armor("full plate", 1500, 50, 8));
 	}
 
+	// populate shield catalog
 	private void loadShields() {
 		ShieldFactory shieldFactory = ShieldFactory.getInstance();
 		shieldFactory.addShield(new Shield("buckler", 15, 5, 1));
@@ -503,8 +457,8 @@ public class HardCodedData implements IMazeData {
 		shieldFactory.addShield(new Shield("shield, large, steel", 20, 15, 2));
 	}
 
+	// fill strength-based carry capacity
 	private void loadWeightLimits() {
-
 		WeightLimit weightLimitTable = WeightLimit.getInstance();
 		weightLimitTable.setModifier(1, 6);
 		weightLimitTable.setModifier(2, 13);
@@ -537,6 +491,7 @@ public class HardCodedData implements IMazeData {
 		weightLimitTable.setModifier(29, 933);
 	}
 
+	// fill agility modifier lookup
 	private void loadAgilityModifiers() {
 		AgilityTable table = AgilityTable.getInstance();
 
@@ -574,8 +529,8 @@ public class HardCodedData implements IMazeData {
 		table.setModifier(32, 11);
 	}
 
+	// fill strength modifier lookup
 	private void loadStrengthModifiers() {
-
 		StrengthTable table = StrengthTable.getInstance();
 		table.setModifier(1, -5);
 		table.setModifier(2, -4);
@@ -624,5 +579,4 @@ public class HardCodedData implements IMazeData {
 		table.setModifier(45, 17);
 		table.setModifier(46, 18);
 	}
-
 }

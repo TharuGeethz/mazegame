@@ -4,6 +4,10 @@ import mazegame.control.CommandResponse;
 import mazegame.control.ParsedInput;
 import mazegame.entity.Player;
 
+/**
+ * Command to quit the game gracefully. Displays a farewell message and signals
+ * the game to end.
+ */
 public class QuitCommand implements Command {
 
 	public CommandResponse execute(ParsedInput input, Player thePlayer) {

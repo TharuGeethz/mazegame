@@ -1,9 +1,9 @@
-
 package mazegame.control;
 
 import mazegame.entity.Character;
 import mazegame.entity.Dice;
 import mazegame.entity.Location;
+import mazegame.entity.Money;
 import mazegame.entity.NonPlayerCharacter;
 import mazegame.entity.Player;
 import mazegame.entity.item.Item;
@@ -13,6 +13,10 @@ import mazegame.entity.utility.StrengthTable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Runs the turn-by-turn combat flow for a location. One actor from each side
+ * acts per round; can pause for player choices.
+ */
 public class CombatSession {
 
 	private final Player thePlayer;
@@ -30,6 +34,7 @@ public class CombatSession {
 		return awaitingPlayerAction;
 	}
 
+	// Capture player and the current location snapshot for this combat
 	public CombatSession(Player thePlayer) {
 		this.thePlayer = thePlayer;
 		this.location = thePlayer.getCurrentLocation();
@@ -44,6 +49,7 @@ public class CombatSession {
 		return firstRound;
 	}
 
+	// Resolve exactly one round: player side then enemy side (if still ongoing)
 	public String resolveSingleRound() {
 		StringBuilder log = new StringBuilder();
 
@@ -77,12 +83,33 @@ public class CombatSession {
 		return log.toString().trim();
 	}
 
+	// Summarize the final outcome and handle rewards/special endings
 	public String getCombatConclusion() {
 		if (isEnemyPartyDefeated()) {
-			if (thePlayer.getLifePoints() > 0 || !livingAllies().isEmpty()) {
-				return "All hostile NPCs are defeated. Victory!";
+//			thePlayer.setStrength(thePlayer.getStrength() + 3);
+			String returnStr = "";
+			if (thePlayer.getCurrentLocation().getLabel().equals("Castle Drawbridge")) {
+				return "You stand victorious at the Castle Drawbridge. Gregor has fallen, and peace returns to the land. The realm hails you as its savior, and your legend will echo through the ages!";
 			}
-			return "You stand alone, but the enemies are defeated.";
+
+			thePlayer.setStrength(thePlayer.getStrength() + 6);
+			returnStr += "\nYour strength increased by 6 points as a reward!";
+			if (thePlayer.getCurrentLocation().getInventory().getGold() != null) {
+				int goldInLocation = thePlayer.getCurrentLocation().getInventory().getGold().getTotal();
+				int newTotal = thePlayer.getInventory().getGold().getTotal() + goldInLocation;
+				thePlayer.getInventory().setGold(new Money(newTotal));
+				thePlayer.getCurrentLocation().getInventory().getGold().subtract(goldInLocation);
+				returnStr += "\nYou got " + goldInLocation + " gold pieces as reward!";
+			}
+
+			if (thePlayer.getLifePoints() < 0 && !livingAllies().isEmpty()) {
+				return "You were slain but your allies defeated all hostile NPCs in this location. Victory! \nHeal yourself by using a potion ASAP!"
+						+ returnStr;
+			} else if (thePlayer.getLifePoints() > 0 || !livingAllies().isEmpty()) {
+				return "All hostile NPCs are defeated in this location. Victory!" + returnStr;
+			}
+
+			return "You stand alone, but the enemies are defeated. Victory!" + returnStr;
 		}
 		if (isPlayerPartyDefeated()) {
 			return "You have fallen. Your party is defeated.";
@@ -90,8 +117,7 @@ public class CombatSession {
 		return "Combat has ended.";
 	}
 
-	// Phases: pick 1 attacker each side
-
+	// The player's side acts: either the player or a random ally
 	private String playerPartyPhase() {
 		StringBuilder log = new StringBuilder("— Player Party Phase —\n");
 
@@ -144,6 +170,7 @@ public class CombatSession {
 		return log.toString().trim();
 	}
 
+	// The enemy side acts with a single random hostile
 	private String enemyPartyPhase() {
 		StringBuilder log = new StringBuilder("— Enemy Party Phase —\n");
 
@@ -175,6 +202,7 @@ public class CombatSession {
 		return log.toString().trim();
 	}
 
+	// Autoplay until it becomes the player's turn (or combat ends)
 	public String advanceCombatUntilPlayerTurn() {
 		StringBuilder log = new StringBuilder();
 
@@ -231,6 +259,7 @@ public class CombatSession {
 		return log.toString().trim();
 	}
 
+	// Player chooses to attack now, then the round continues
 	public String playerAttackAndAdvance(String maybeTargetName) {
 		StringBuilder log = new StringBuilder();
 
@@ -298,6 +327,7 @@ public class CombatSession {
 		return log.toString().trim();
 	}
 
+	// Player spends the turn (e.g., after equip/use/flee attempt), then continue
 	public String playerSkipTurnAndAdvance(String reason) {
 		StringBuilder log = new StringBuilder();
 
@@ -336,6 +366,7 @@ public class CombatSession {
 		return isEnemyPartyDefeated() || isPlayerPartyDefeated();
 	}
 
+	// Helpers to get alive allies/hostiles
 	private List<NonPlayerCharacter> livingAllies() {
 		return thePlayer.getNpcCollection().values().stream().filter(n -> !n.isHostile() && n.getLifePoints() > 0)
 				.collect(Collectors.toCollection(ArrayList::new));
@@ -354,6 +385,7 @@ public class CombatSession {
 		return livingHostiles().isEmpty();
 	}
 
+	// Player attack roll and damage resolution against a single target
 	private String playerAttacks(NonPlayerCharacter target) {
 		Weapon weaponUsed = getWeaponForAttack(thePlayer);
 		int strMod = StrengthTable.getInstance().getModifier(thePlayer.getStrength());
@@ -388,6 +420,7 @@ public class CombatSession {
 		}
 	}
 
+	// NPC vs player attack resolution
 	private String npcAttacksPlayer(NonPlayerCharacter attacker) {
 		Weapon weaponUsed = getWeaponForAttack(attacker);
 		int strMod = StrengthTable.getInstance().getModifier(attacker.getStrength());
@@ -413,6 +446,7 @@ public class CombatSession {
 		}
 	}
 
+	// NPC vs NPC attack resolution
 	private String npcAttacksNpc(NonPlayerCharacter attacker, NonPlayerCharacter victim) {
 		Weapon weaponUsed = getWeaponForAttack(attacker);
 		int strMod = StrengthTable.getInstance().getModifier(attacker.getStrength());
@@ -447,12 +481,14 @@ public class CombatSession {
 		}
 	}
 
+	// Utility: pick a random element or null
 	private <T> T pickRandom(List<T> list) {
 		if (list == null || list.isEmpty())
 			return null;
 		return list.get(rng.nextInt(list.size()));
 	}
 
+	// Lookup a specific hostile by lowercase key, ensuring it’s alive and hostile
 	private NonPlayerCharacter getSpecificHostile(String keyNameLower) {
 		NonPlayerCharacter target = location.getNpcCollection().get(keyNameLower);
 		if (target == null)
@@ -462,6 +498,7 @@ public class CombatSession {
 		return target;
 	}
 
+	// Prefer equipped weapon; otherwise first weapon in inventory; fallback to 1d2
 	private Weapon getWeaponForAttack(Character character) {
 		Weapon equipped = character.getEquippedWeapon();
 		if (equipped != null) {
@@ -477,6 +514,7 @@ public class CombatSession {
 		return new Weapon("No Weapon", 0, 0, "1d2"); // no weapon
 	}
 
+	// Print compact end-of-turn HP for player and all NPCs (hostiles first)
 	private String endOfTurnStatus() {
 		StringBuilder sb = new StringBuilder("— Status —\n");
 		sb.append(String.format("Player: %d HP\n", thePlayer.getLifePoints()));

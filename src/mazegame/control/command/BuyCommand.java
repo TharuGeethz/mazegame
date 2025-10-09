@@ -3,8 +3,10 @@ package mazegame.control.command;
 import mazegame.control.CommandResponse;
 import mazegame.control.ParsedInput;
 import mazegame.entity.Blacksmith;
+import mazegame.entity.FiniteInventory;
 import mazegame.entity.Player;
 import mazegame.entity.item.Item;
+import mazegame.entity.utility.WeightLimit;
 
 public class BuyCommand implements Command {
 	// If bought player pays as per the weapon and armour table
@@ -47,6 +49,21 @@ public class BuyCommand implements Command {
 		// Check if player already has this item
 		if (currentPlayer.getInventory().hasItem(itemToBuy.getLabel())) {
 			return new CommandResponse("You already have " + itemToBuy.getLabel() + ".");
+		}
+
+		//check if player weight limit exceeds
+		int weightLimit = WeightLimit.getInstance().getModifier(currentPlayer.getStrength());
+		FiniteInventory playerInventory = (FiniteInventory) currentPlayer.getInventory();
+		double playerInventoryWeight = playerInventory.getWeight();
+
+		for (Item item : currentPlayer.getWearingItems().values()) {
+			playerInventoryWeight += item.getWeight();
+		}
+
+		double itemWeight = itemToBuy.getWeight();
+
+		if (playerInventoryWeight + itemWeight > weightLimit) {
+			return new CommandResponse("The item you are trying to purchase exceeds your weight limit.");
 		}
 
 		// Process the purchase & remove gold from player
