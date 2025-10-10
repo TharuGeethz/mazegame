@@ -2,6 +2,7 @@ package mazegame.control;
 
 import mazegame.entity.Character;
 import mazegame.entity.Dice;
+import mazegame.entity.FiniteInventory;
 import mazegame.entity.Location;
 import mazegame.entity.Money;
 import mazegame.entity.NonPlayerCharacter;
@@ -93,6 +94,9 @@ public class CombatSession {
 			}
 
 			thePlayer.setStrength(thePlayer.getStrength() + 6);
+			FiniteInventory playerInventory = (FiniteInventory) thePlayer.getInventory();
+			playerInventory.setStrength(thePlayer.getStrength()); // setting the new weight limit
+
 			returnStr += "\nYour strength increased by 6 points as a reward!";
 			if (thePlayer.getCurrentLocation().getInventory().getGold() != null) {
 				int goldInLocation = thePlayer.getCurrentLocation().getInventory().getGold().getTotal();
