@@ -15,7 +15,7 @@ public class CombatState extends CommandState {
 		this.getAvailableCommands().put("quit", new QuitCommand());
 		this.getAvailableCommands().put("look", new LookCommand());
 		this.getAvailableCommands().put("attack", new AttackCommand());
-		this.getAvailableCommands().put("a", new AttackCommand()); // shorthand alias
+		this.getAvailableCommands().put("a", new AttackCommand()); // shorthand alias of attack
 		this.getAvailableCommands().put("list", new ListItemsCommand());
 		this.getAvailableCommands().put("equip", new EquipItemCommand());
 		this.getAvailableCommands().put("unequip", new UnequipItemCommand());

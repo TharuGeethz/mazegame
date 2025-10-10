@@ -41,9 +41,8 @@ public class BuyCommand implements Command {
 		// Check if player has enough gold
 		int itemPrice = itemToBuy.getValue();
 		if (currentPlayer.getInventory().getGold().getTotal() < itemPrice) {
-			return new CommandResponse("You don't have enough gold. " + itemToBuy.getLabel() +
-					" costs " + itemPrice + " gold pieces, but you only have " +
-					currentPlayer.getInventory().getGold().getTotal() + ".");
+			return new CommandResponse("You don't have enough gold. " + itemToBuy.getLabel() + " costs " + itemPrice
+					+ " gold pieces, but you only have " + currentPlayer.getInventory().getGold().getTotal() + ".");
 		}
 
 		// Check if player already has this item
@@ -51,18 +50,21 @@ public class BuyCommand implements Command {
 			return new CommandResponse("You already have " + itemToBuy.getLabel() + ".");
 		}
 
-		//check if player weight limit exceeds
-		int weightLimit = WeightLimit.getInstance().getModifier(currentPlayer.getStrength());
+		// check if player weight limit exceeds
+
 		FiniteInventory playerInventory = (FiniteInventory) currentPlayer.getInventory();
 		double playerInventoryWeight = playerInventory.getWeight();
 
+		double weightLimit = playerInventory.getWeightLimit();
+
+		double wearingItemsWeight = 0;
 		for (Item item : currentPlayer.getWearingItems().values()) {
-			playerInventoryWeight += item.getWeight();
+			wearingItemsWeight += item.getWeight();
 		}
 
 		double itemWeight = itemToBuy.getWeight();
 
-		if (playerInventoryWeight + itemWeight > weightLimit) {
+		if (playerInventoryWeight + itemWeight + wearingItemsWeight > weightLimit) {
 			return new CommandResponse("The item you are trying to purchase exceeds your weight limit.");
 		}
 
@@ -74,10 +76,14 @@ public class BuyCommand implements Command {
 
 		// Remove item from shop and add to player
 		Item purchasedItem = shop.getInventory().removeItem(itemToBuy.getLabel());
-		currentPlayer.getInventory().addItem(purchasedItem);
+		boolean successFlag = playerInventory.addItem(purchasedItem, wearingItemsWeight);
 
-		return new CommandResponse("You bought " + purchasedItem.getLabel() + " for " + itemPrice +
-				" gold pieces. You have " + currentPlayer.getInventory().getGold().getTotal() +
-				" gold pieces remaining.");
+		if (!successFlag) {
+			return new CommandResponse("Something went wrong when adding item to the inventory!.");
+		}
+
+		return new CommandResponse(
+				"You bought " + purchasedItem.getLabel() + " for " + itemPrice + " gold pieces. You have "
+						+ currentPlayer.getInventory().getGold().getTotal() + " gold pieces remaining.");
 	}
 }

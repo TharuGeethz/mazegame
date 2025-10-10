@@ -15,8 +15,7 @@ public class CommandHandler {
 	}
 
 	public CommandResponse processTurn(String userInput, Player thePlayer) {
-
-		availableCommands = availableCommands.update(thePlayer); // refresh state
+		availableCommands = availableCommands.update(thePlayer); // get the appropriate state
 		ParsedInput validInput = parse(userInput); // tokenize input
 		Command theCommand = (Command) availableCommands.getCommand(validInput.getCommand());
 		if (theCommand == null) {

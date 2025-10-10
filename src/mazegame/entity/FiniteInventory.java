@@ -31,9 +31,13 @@ public class FiniteInventory extends Inventory {
 		return currentWeight;
 	}
 
+	public double getWeightLimit() {
+		return weightLimit;
+	}
+
 	// add item only if under weight limit
-	public boolean addItem(Item theItem) {
-		if (weightLimit > theItem.getWeight() + getWeight()) {
+	public boolean addItem(Item theItem, double wearingItemsWeight) {
+		if (weightLimit > theItem.getWeight() + getWeight() + wearingItemsWeight) {
 			return super.addItem(theItem);
 		}
 		return false;
