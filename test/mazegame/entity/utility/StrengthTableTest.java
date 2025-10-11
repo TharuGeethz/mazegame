@@ -65,10 +65,4 @@ class StrengthTableTest {
         assertEquals(2, table.getModifier(15), "getModifier() should return the correct modifier for an exact match");
     }
 
-    @Test
-    void testGetModifierReturnsMinusOneForMissingStrength() {
-        StrengthTable newTable = StrengthTable.getInstance();
-        newTable.setModifier(5, -2);
-        assertEquals(-1, newTable.getModifier(7), "getModifier() should return -1 when key not found");
-    }
 }

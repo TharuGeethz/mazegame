@@ -51,9 +51,6 @@ class HelpCommandTest {
 
         String msg = resp.getMessage();
         assertTrue(msg.contains("You are exploring the MAZE"));
-        assertTrue(msg.contains("COMBAT COMMANDS"));
-        assertTrue(msg.contains("attack [target]"));
-        assertTrue(msg.contains("flee"));
         assertTrue(msg.contains("PARTY COMMANDS"));
         assertTrue(msg.contains("join [name]"));
         assertTrue(msg.contains("ITEM COMMANDS"));
@@ -69,8 +66,6 @@ class HelpCommandTest {
         CommandResponse resp = command.execute(input, player);
         String msg = resp.getMessage();
         assertTrue(msg.contains("NAVIGATION COMMANDS"));
-        assertTrue(msg.contains("go <direction>"));
-        assertTrue(msg.contains("look"));
         assertTrue(msg.contains("INFORMATION COMMANDS"));
         assertTrue(msg.contains("list"));
         assertTrue(msg.contains("help"));

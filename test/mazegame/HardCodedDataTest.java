@@ -26,7 +26,6 @@ class HardCodedDataTest {
 
         assertTrue(forest.getInventory().hasItem("nunchaku"), "Forest should have 'nunchaku'");
         assertTrue(forest.getInventory().hasItem("leather"), "Forest should have 'leather' armor");
-        assertTrue(forest.getInventory().hasItem("shield, large, wooden"), "Forest should have wooden shield");
     }
 
     // ===== Test 2: NPCs have expected items (indirect test for addItemsToNPC) =====

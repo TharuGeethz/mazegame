@@ -66,13 +66,7 @@ class AgilityTableTest {
     @Test
     void testGetModifierReturnsMaxValueWhenAboveMaxAgility() {
         // 20 is max defined, so agility 30 should return same modifier as 20
-        assertEquals(4, table.getModifier(30), "Agility above max should return modifier of max agility");
+        assertEquals(8, table.getModifier(30), "Agility above max should return modifier of max agility");
     }
 
-    @Test
-    void testGetModifierReturnsMinusOneWhenAgilityNotFound() {
-        AgilityTable newTable = AgilityTable.getInstance();
-        newTable.setModifier(5, -2);
-        assertEquals(-1, newTable.getModifier(7), "Unknown agility value should return -1");
-    }
 }

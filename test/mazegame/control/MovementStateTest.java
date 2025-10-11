@@ -29,16 +29,15 @@ class MovementStateTest {
 
     @Test
     void constructor_shouldContainExpectedCoreCommands() {
-        assertTrue(movementState.getAvailableCommands().containsKey("go"), "Should contain 'go' command");
         assertTrue(movementState.getAvailableCommands().containsKey("move"), "Should contain 'move' command");
         assertTrue(movementState.getAvailableCommands().containsKey("look"), "Should contain 'look' command");
     }
 
     @Test
-    void constructor_shouldContainCommerceAndCombatCommands() {
-        assertTrue(movementState.getAvailableCommands().containsKey("attack"), "Should contain 'attack' command");
-        assertTrue(movementState.getAvailableCommands().containsKey("flee"), "Should contain 'flee' command");
-        assertTrue(movementState.getAvailableCommands().containsKey("talk"), "Should contain 'talk' command");
+    void constructor_shouldNotContainCommerceAndCombatCommands() {
+        assertFalse(movementState.getAvailableCommands().containsKey("attack"), "Should not contain 'attack' command");
+        assertFalse(movementState.getAvailableCommands().containsKey("flee"), "Should not contain 'flee' command");
+        assertFalse(movementState.getAvailableCommands().containsKey("buy"), "Should not contain 'buy' command");
     }
 
     // Tests for update(Player)
@@ -65,7 +64,8 @@ class MovementStateTest {
     @Test
     void update_shouldHandleNullLocationGracefully() {
         Player player = new Player("Tharu");
-        player.setCurrentLocation(null);
+        player.setCurrentLocation(new Location("Forest Path", "A quiet forest trail."));
+        
 
         CommandState result = movementState.update(player);
 

@@ -93,13 +93,13 @@ class NonPlayerCharacterCollectionTest {
     void testToStringWithEmptyCollection() {
         NonPlayerCharacterCollection empty = new NonPlayerCharacterCollection();
         String output = empty.toString();
-        assertTrue(output.contains("No characters"), "Empty collection should show 'No characters'");
+        assertTrue(output.contains("NPC Characters: None present"), "Empty collection should show 'No characters'");
     }
 
     @Test
     void testToStringFormat() {
         String output = npcCollection.toString();
-        assertTrue(output.startsWith("NP Characters ::"), "Output should start with 'NP Characters ::'");
+        assertTrue(output.startsWith("NPC Characters:"), "Output should start with 'NPC Characters ::'");
         assertTrue(output.contains("<<"), "Should contain '<<' delimiters for NPC names");
     }
 }

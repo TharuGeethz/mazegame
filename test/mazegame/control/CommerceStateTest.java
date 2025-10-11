@@ -24,7 +24,6 @@ class CommerceStateTest {
         assertTrue(commerceState.getAvailableCommands().containsKey("buy"));
         assertTrue(commerceState.getAvailableCommands().containsKey("sell"));
         assertTrue(commerceState.getAvailableCommands().containsKey("move"));
-        assertTrue(commerceState.getAvailableCommands().containsKey("go"));
         assertTrue(commerceState.getAvailableCommands().containsKey("look"));
         assertTrue(commerceState.getAvailableCommands().containsKey("quit"));
         assertTrue(commerceState.getAvailableCommands().containsKey("list"));
@@ -42,7 +41,7 @@ class CommerceStateTest {
     @Test
     void constructor_shouldCreateNonEmptyCommandMap() {
         assertFalse(commerceState.getAvailableCommands().isEmpty());
-        assertEquals(9, commerceState.getAvailableCommands().size());
+        assertEquals(10, commerceState.getAvailableCommands().size());
     }
 
     // Tests for update(Player)

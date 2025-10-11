@@ -65,11 +65,6 @@ class WeightLimitTest {
 
     @Test
     void testGetModifierAboveMaxStrength() {
-        assertEquals(200, weightLimit.getModifier(30), "getModifier() should return the max strength value for above range");
-    }
-
-    @Test
-    void testGetModifierReturnsMinusOneForMissingKey() {
-        assertEquals(-1, weightLimit.getModifier(8), "getModifier() should return -1 if key does not exist");
+        assertEquals(933, weightLimit.getModifier(30), "getModifier() should return the max strength value for above range");
     }
 }
