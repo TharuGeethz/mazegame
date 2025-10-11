@@ -5,6 +5,8 @@ import mazegame.control.ParsedInput;
 import mazegame.entity.Exit;
 import mazegame.entity.Location;
 import mazegame.entity.Player;
+import mazegame.entity.utility.WeightLimit;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,6 +15,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LookCommandTest {
+	@BeforeEach
+	void setUp() {
+		WeightLimit weightLimitTable = WeightLimit.getInstance();
+		weightLimitTable.setModifier(10, 66);
+		weightLimitTable.setModifier(20, 266);
+	}
 
 	@Test
 	void whenNoArguments_returnsLocationToString() {

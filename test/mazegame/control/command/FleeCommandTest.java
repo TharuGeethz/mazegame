@@ -6,6 +6,8 @@ import mazegame.control.CombatSession;
 import mazegame.entity.Exit;
 import mazegame.entity.Location;
 import mazegame.entity.Player;
+import mazegame.entity.utility.WeightLimit;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -14,6 +16,12 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FleeCommandTest {
+	@BeforeEach
+	void setUp() {
+		WeightLimit weightLimitTable = WeightLimit.getInstance();
+		weightLimitTable.setModifier(10, 66);
+		weightLimitTable.setModifier(20, 266);
+	}
 
 	@Test
 	void fleeingFromSingleExit_movesToThatDestination_andMessageMentionsIt() {

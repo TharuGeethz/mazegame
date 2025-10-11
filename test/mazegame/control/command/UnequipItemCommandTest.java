@@ -4,6 +4,7 @@ import mazegame.control.CommandResponse;
 import mazegame.control.ParsedInput;
 import mazegame.entity.Player;
 import mazegame.entity.item.Weapon;
+import mazegame.entity.utility.WeightLimit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,11 +15,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UnequipItemCommandTest {
 
+
     private UnequipItemCommand command;
     private Player player;
 
     @BeforeEach
     void setUp() {
+        WeightLimit weightLimitTable = WeightLimit.getInstance();
+        weightLimitTable.setModifier(10, 66);
+        weightLimitTable.setModifier(20, 266);
         command = new UnequipItemCommand();
         player = new Player("Hero");
         player.getInventory().addItem(new Weapon("sword", 10, 5, "1d6"));

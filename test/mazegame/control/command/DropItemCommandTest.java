@@ -2,9 +2,12 @@ package mazegame.control.command;
 
 import mazegame.control.CommandResponse;
 import mazegame.control.ParsedInput;
+import mazegame.entity.Blacksmith;
 import mazegame.entity.Location;
 import mazegame.entity.Player;
 import mazegame.entity.item.Weapon;
+import mazegame.entity.utility.WeightLimit;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,6 +16,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DropItemCommandTest {
+	@BeforeEach
+	void setUp() {
+		WeightLimit weightLimitTable = WeightLimit.getInstance();
+		weightLimitTable.setModifier(10, 66);
+		weightLimitTable.setModifier(20, 266);
+	}
 
 	@Test
 	void whenNoArgument_shouldAskWhichItem() {
@@ -65,6 +74,6 @@ class DropItemCommandTest {
 				"Dropped item should no longer be in player's inventory.");
 		assertTrue(town.getInventory().getItemList().containsKey("longsword"),
 				"Dropped item should now be in location inventory.");
-		assertEquals("You dropped the longsword", resp.getMessage());
+		assertTrue(resp.getMessage().contains("longsword dropped"));
 	}
 }

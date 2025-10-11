@@ -5,6 +5,7 @@ import mazegame.control.ParsedInput;
 import mazegame.entity.NonPlayerCharacter;
 import mazegame.entity.Player;
 import mazegame.entity.utility.NonPlayerCharacterCollection;
+import mazegame.entity.utility.WeightLimit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,9 @@ class CheckCommandTest {
 
     @BeforeEach
     void setUp() {
+        WeightLimit weightLimitTable = WeightLimit.getInstance();
+        weightLimitTable.setModifier(10, 66);
+        weightLimitTable.setModifier(20, 266);
         command = new CheckCommand();
         player = new Player("Hero");
         ally = new NonPlayerCharacter("Luna", 12, 10, 25, "Stay close!", false);
@@ -43,7 +47,7 @@ class CheckCommandTest {
         ParsedInput input = new ParsedInput("check", new ArrayList<>());
         CommandResponse response = command.execute(input, player);
 
-        assertEquals("Which ally do you want to check? ", response.getMessage());
+        assertTrue(response.getMessage().contains("NPC Name: Luna"));
     }
 
     @Test

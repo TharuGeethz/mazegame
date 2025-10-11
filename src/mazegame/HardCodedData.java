@@ -90,9 +90,9 @@ public class HardCodedData implements IMazeData {
 				"The Cave walls sparkle with embedded crystals, casting rainbow reflections across the stone. The beauty is breathtaking, but the dripping of unseen water echoes eerily.",
 				"Crystal Cave");
 
-		Location castleDrawbridge = new Location(
-				"The looming walls of Gregor’s castle. A raised drawbridge blocks the only entrance.",
-				"Castle Drawbridge");
+		Location gregorsCastle = new Location(
+				"The looming walls of Gregor’s castle. Be cautious as Gregor is tough!",
+				"Gregor Castle");
 
 		// connect locations with exits
 
@@ -136,10 +136,10 @@ public class HardCodedData implements IMazeData {
 		titansAnvil.getExitCollection().addExit("north", new Exit("A back path leads toward the inn.", innOfTheBoar));
 
 		// Town Square <-> Castle Drawbridge with lock
-		Exit townToCastle = new Exit("The road climbs toward the Gregor's castle.", castleDrawbridge);
+		Exit townToCastle = new Exit("The road climbs toward the Gregor's castle. But the entrance is locked", gregorsCastle);
 		townToCastle.setLocked(true); // locked until banner condition
 		townSquare.getExitCollection().addExit("southwest", townToCastle);
-		castleDrawbridge.getExitCollection().addExit("northeast",
+		gregorsCastle.getExitCollection().addExit("northeast",
 				new Exit("The town square is just near by.", townSquare));
 
 		// Town Square <-> Crystal Cave
@@ -149,11 +149,11 @@ public class HardCodedData implements IMazeData {
 				new Exit("You follow the tunnel upward and emerge into the bustling town square.", townSquare));
 
 		// Crystal Cave <-> Castle Drawbridge with lock
-		Exit caveToCastle = new Exit("A rough stone passage leads toward the looming shape of Gregor's castle.",
-				castleDrawbridge);
+		Exit caveToCastle = new Exit("The looming walls of Gregor’s castle. A raised drawbridge blocks the only entrance.",
+				gregorsCastle);
 		caveToCastle.setLocked(true); // locked until banner condition
 		crystalCave.getExitCollection().addExit("west", caveToCastle);
-		castleDrawbridge.getExitCollection().addExit("east", new Exit(
+		gregorsCastle.getExitCollection().addExit("east", new Exit(
 				"You leave the shadow of the castle and descend into the glittering crystal cave.", crystalCave));
 
 		// place items in locations
@@ -197,7 +197,7 @@ public class HardCodedData implements IMazeData {
 				crystalCave);
 
 		// Castle Drawbridge
-		addItemsToLocation(List.of("scythe"), List.of("padded"), List.of(), castleDrawbridge);
+		addItemsToLocation(List.of("scythe"), List.of("padded"), List.of(), gregorsCastle);
 
 		// add healing potions
 		forestClearing.getInventory()
@@ -212,7 +212,7 @@ public class HardCodedData implements IMazeData {
 				"Collected at dawn from enchanted crystals, restores clarity and health."));
 		whisperingMarsh.getInventory().addPotion(new HealingPotion("phoenix feather elixir",
 				"Infused with phoenix magic, restores health and renews energy."));
-		castleDrawbridge.getInventory().addPotion(new HealingPotion("dragonfruit brew",
+		gregorsCastle.getInventory().addPotion(new HealingPotion("dragonfruit brew",
 				"A fiery red potion brewed from dragonfruit, heals and invigorates."));
 
 		// add NPCs to locations
@@ -268,7 +268,7 @@ public class HardCodedData implements IMazeData {
 		addItemsToNPC(List.of("longsword"), List.of("chain shirt"), List.of("shield, large, steel"), Bram);
 		npcsTownSquare.add(Bram);
 
-		NonPlayerCharacter Piper = new NonPlayerCharacter("Piper", 11, 14, 14,
+		NonPlayerCharacter Piper = new NonPlayerCharacter("Piper", 18, 14, 18,
 				"If you’re hunting trouble, I’ll watch your flank.", false);
 		addItemsToNPC(List.of("sword, short"), List.of("leather"), List.of("shield, small, wooden"), Piper);
 		npcsTownSquare.add(Piper);
@@ -288,7 +288,7 @@ public class HardCodedData implements IMazeData {
 		addItemsToNPC(List.of("scimitar"), List.of("chain shirt"), List.of("buckler"), Iris);
 		npcsCrystalCave.add(Iris);
 
-		NonPlayerCharacter lostMiner = new NonPlayerCharacter("Edrin", 11, 10, 14,
+		NonPlayerCharacter lostMiner = new NonPlayerCharacter("Edrin", 20, 10, 18,
 				"Been chasin’ a gleam that keeps movin’… can’t find the way out.", false);
 		addItemsToNPC(List.of("handaxe"), List.of("leather"), List.of(), lostMiner);
 		npcsCrystalCave.add(lostMiner);
@@ -318,17 +318,17 @@ public class HardCodedData implements IMazeData {
 		// Castle Drawbridge boss group
 		List<NonPlayerCharacter> npcsDrawbridge = new ArrayList<>();
 
-		NonPlayerCharacter Brute = new NonPlayerCharacter("Brute", 16, 8, 14,
+		NonPlayerCharacter Brute = new NonPlayerCharacter("Brute", 16, 8, 10,
 				"You think you can pass? Not while I breathe.", true);
 		addItemsToNPC(List.of("greataxe"), List.of("chainmail"), List.of("shield, large, steel"), Brute);
 		npcsDrawbridge.add(Brute);
 
-		NonPlayerCharacter Karg = new NonPlayerCharacter("Karg", 18, 10, 16,
+		NonPlayerCharacter Karg = new NonPlayerCharacter("Karg", 18, 10, 12,
 				"Banner? Ha! we'll rip your arms off and sew them to ours.", true);
 		addItemsToNPC(List.of("greatsword"), List.of("full plate"), List.of("shield, large, steel"), Karg);
 		npcsDrawbridge.add(Karg);
 
-		NonPlayerCharacter Gregor = new NonPlayerCharacter("Gregor", 25, 12, 25,
+		NonPlayerCharacter Gregor = new NonPlayerCharacter("Gregor", 22, 12, 22,
 				"You smell like fear. Come closer so I can enjoy it.", true);
 		addItemsToNPC(List.of("halberd"), List.of("splint mail"), List.of("shield, large, wooden"), Gregor);
 		npcsDrawbridge.add(Gregor);
@@ -338,12 +338,12 @@ public class HardCodedData implements IMazeData {
 		addItemsToNPC(List.of("warhammer"), List.of("banded mail"), List.of("shield, small, steel"), Rusk);
 		npcsDrawbridge.add(Rusk);
 
-		NonPlayerCharacter Thal = new NonPlayerCharacter("Thal", 14, 11, 19, "Banner or blood —  choose quickly.",
+		NonPlayerCharacter Thal = new NonPlayerCharacter("Thal", 14, 11, 15, "Banner or blood —  choose quickly.",
 				true);
 		addItemsToNPC(List.of("greatsword"), List.of("half-plate"), List.of("shield, large, steel"), Thal);
 		npcsDrawbridge.add(Thal);
 
-		castleDrawbridge.setNpcs(npcsDrawbridge, true);
+		gregorsCastle.setNpcs(npcsDrawbridge, true);
 
 		// register all locations and shops
 		GameStatus.getInstance().addLocation(forestClearing);
@@ -355,7 +355,7 @@ public class HardCodedData implements IMazeData {
 		GameStatus.getInstance().addShop(forgeOfHelan);
 		GameStatus.getInstance().addShop(titansAnvil);
 		GameStatus.getInstance().addLocation(crystalCave);
-		GameStatus.getInstance().addLocation(castleDrawbridge);
+		GameStatus.getInstance().addLocation(gregorsCastle);
 	}
 
 	// helper to add items to a location inventory

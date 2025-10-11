@@ -17,11 +17,6 @@ public class FleeCommand implements Command {
 
 	public CommandResponse execute(ParsedInput userInput, Player currentPlayer) {
 
-		// can only flee if currently in combat
-		if (!currentPlayer.inCombat()) {
-			return new CommandResponse("You can only flee during combat.");
-		}
-
 		// end the combat session as player flees from current fight
 		currentPlayer.setCombatSession(null);
 

@@ -89,8 +89,8 @@ public class CombatSession {
 		if (isEnemyPartyDefeated()) {
 //			thePlayer.setStrength(thePlayer.getStrength() + 3);
 			String returnStr = "";
-			if (thePlayer.getCurrentLocation().getLabel().equals("Castle Drawbridge")) {
-				return "You stand victorious at the Castle Drawbridge. Gregor has fallen, and peace returns to the land. The realm hails you as its savior, and your legend will echo through the ages!";
+			if (thePlayer.getCurrentLocation().getLabel().equals("Gregor Castle")) {
+				return "You stand victorious at the Gregor's Castle. Gregor has fallen, and peace returns to the land. The realm hails you as its savior, and your legend will echo through the ages!";
 			}
 
 			thePlayer.setStrength(thePlayer.getStrength() + 6);
@@ -343,7 +343,7 @@ public class CombatSession {
 		log.append("\n\n===== Round ").append(round).append(" =====\n");
 		if (reason != null && !reason.isBlank())
 			log.append(reason).append("\n");
-		log.append("You spend your turn.\n");
+		log.append("You spent your turn.\n");
 
 		// enemy phase
 		awaitingPlayerAction = false;

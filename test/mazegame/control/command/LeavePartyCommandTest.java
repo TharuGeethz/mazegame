@@ -6,6 +6,8 @@ import mazegame.entity.Location;
 import mazegame.entity.NonPlayerCharacter;
 import mazegame.entity.Player;
 import mazegame.entity.utility.NonPlayerCharacterCollection;
+import mazegame.entity.utility.WeightLimit;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,6 +15,12 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LeavePartyCommandTest {
+    @BeforeEach
+    void setUp() {
+        WeightLimit weightLimitTable = WeightLimit.getInstance();
+        weightLimitTable.setModifier(10, 66);
+        weightLimitTable.setModifier(20, 266);
+    }
 
     @Test
     void whenPlayerHasNoParty_shouldSayNoPartyToLeave() {

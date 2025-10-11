@@ -6,6 +6,7 @@ import mazegame.entity.Blacksmith;
 import mazegame.entity.Money;
 import mazegame.entity.Player;
 import mazegame.entity.item.Weapon;
+import mazegame.entity.utility.WeightLimit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +24,9 @@ class BuyCommandTest {
 
     @BeforeEach
     void setUp() {
+        WeightLimit weightLimitTable = WeightLimit.getInstance();
+        weightLimitTable.setModifier(10, 66);
+        weightLimitTable.setModifier(20, 266);
         command = new BuyCommand();
         player = new Player("Hero");
         shop = new Blacksmith("Forge of Helan", "A stronghold of fine weapons");

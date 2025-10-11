@@ -59,6 +59,6 @@ public class UnlockCommand implements Command {
 		// Unlock and confirm success
 		exit.setLocked(false);
 
-		return new CommandResponse("You use the banner to unlock the path. The way to Gregor's castle is now open!");
+		return new CommandResponse("You used the banner to unlock the path. The way to Gregor's castle is now open!");
 	}
 }
